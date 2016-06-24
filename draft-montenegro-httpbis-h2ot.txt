@@ -70,20 +70,20 @@ Table of Contents
      2.3.  CoAP  . . . . . . . . . . . . . . . . . . . . . . . . . .   5
      2.4.  Protocols Comparison  . . . . . . . . . . . . . . . . . .   6
    3.  Importance of Protocol Reuse  . . . . . . . . . . . . . . . .   6
-   4.  HTTP/2 in IoT . . . . . . . . . . . . . . . . . . . . . . . .   7
-   5.  HTTP/2 over UDP - QUIC  . . . . . . . . . . . . . . . . . . .   7
-   6.  Profile of HTTP/2 for IoT . . . . . . . . . . . . . . . . . .   8
+   4.  HTTP/2 in IoT . . . . . . . . . . . . . . . . . . . . . . . .   8
+   5.  HTTP/2 over UDP - QUIC  . . . . . . . . . . . . . . . . . . .   8
+   6.  Profile of HTTP/2 for IoT . . . . . . . . . . . . . . . . . .   9
    7.  Negotiation of HTTP/2 for IoT (gab) . . . . . . . . . . . . .   9
    8.  Gateway and Proxying Issues (Salvatore) . . . . . . . . . . .   9
    9.  Implementation Considerations . . . . . . . . . . . . . . . .   9
    10. Experimentation and Performance . . . . . . . . . . . . . . .  10
      10.1.  GET Example  . . . . . . . . . . . . . . . . . . . . . .  10
-       10.1.1.  HTTP/1.1 . . . . . . . . . . . . . . . . . . . . . .  10
+       10.1.1.  HTTP/1.1 . . . . . . . . . . . . . . . . . . . . . .  11
        10.1.2.  HTTP/2 . . . . . . . . . . . . . . . . . . . . . . .  11
        10.1.3.  Comparison . . . . . . . . . . . . . . . . . . . . .  12
-   11. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  12
-   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
-     12.1.  Normative References . . . . . . . . . . . . . . . . . .  12
+   11. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  13
+   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
+     12.1.  Normative References . . . . . . . . . . . . . . . . . .  13
      12.2.  Informative References . . . . . . . . . . . . . . . . .  13
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
 
@@ -94,7 +94,7 @@ Table of Contents
    work elsewhere in the stack was necessary.  (In this document, the
    "things" in "IoT" are nodes that are constrained in some manner--
    e.g., cpu, memory, power--such that direct use of unmodified
-   mainstream protocols is challenging.)Once the IPv6 adaptation was
+   mainstream protocols is challenging.)  Once the IPv6 adaptation was
    understood, the next questions were what protocols to use above IP
    for different functions and at different layers.  That question may
    not have a single answer that is always best for all scenarios and
@@ -236,7 +236,7 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
 
    MQ Telemetry Transport (MQTT) is a publish/subscribe messaging
    protocol running on top of TCP.  It was created by IBM, now being
-   standardized by OASIS.  It is popular in the internet scenario (node
+   standardized by OASIS.  It is popular in the Internet scenario (node
    to cloud, gateway to cloud) and it aims to connect embedded devices
    and networks with applications and middleware.  It is a compact,
    binary protocol, and is very popular in certain application domains.
@@ -264,16 +264,16 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
 
    The protocol meets IoT requirements through the modification of some
    HTTP functionalities to achieve low-power consumption and operation
-   over lossy links.  In addition, CoAP may interact easily with HTTP
-   through a proxy thanks to the common REST architecture.  CoAP works
-   on port 5683 and offers optional reliable delivery (thru a
-   retransmission mechanism), support for unicast and multicast (which
-   satisfies group communication for IoT), and asynchronous message
-   exchange using simple and low complexity headers (a typical CoAP
-   message can be between 10 and 20 bytes).
+   over lossy links.  To aovid undesirable packet fragmentation the CoAP
+   specification provides also an upper bound to the message size,
+   dictating that a CoAP message, appropriately encapsulated, SHOULD fit
+   within a single IP datagram
 
-   It is the third most popular protocol in the survey with a 21%
-   preference.  Nevertheless, since CoAP is UDP-based, it also suffers
+      If the Path MTU is not known for a destination, an IP MTU of 1280
+      bytes SHOULD be assumed; if nothing is known about the size of the
+      headers, good upper bounds are 1152 bytes for the message size and
+      1024 bytes for the payload size.
+
 
 
 
@@ -282,6 +282,16 @@ Montenegro, et al.      Expires December 26, 2016               [Page 5]
 Internet-Draft               HTTP/2 for IoT                    June 2016
 
 
+   In addition, CoAP may interact easily with HTTP through a proxy
+   thanks to the common REST architecture.  CoAP works on port 5683 and
+   offers optional reliable delivery (thru a retransmission mechanism),
+   support for unicast and multicast (which satisfies group
+   communication for IoT), and asynchronous message exchange using
+   simple and low complexity headers (a typical CoAP message can be
+   between 10 and 20 bytes).
+
+   It is the third most popular protocol in the survey with a 21%
+   preference.  Nevertheless, since CoAP is UDP-based, it also suffers
    from firewall traversal issues and lack of integration with existing
    enterprise infrastructures.  There is ongoing work to specify the use
    of CoAP over TCP as well as CoAP over TLS, in an attempt to overcome
@@ -320,6 +330,14 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
    o  Each of these protocols is an island with its own security
       measures (or lack thereof) and very limited review.
 
+
+
+
+Montenegro, et al.      Expires December 26, 2016               [Page 6]
+
+Internet-Draft               HTTP/2 for IoT                    June 2016
+
+
    The previous two points can be summarized as follows:
 
    A security and privacy environment even more challenging than usual:
@@ -329,15 +347,6 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
       stimulates researchers into high gear.  It is a daunting problem
       for sure, but at least it is on the radar of folks and consortia
       working on IoT.  Nevertheless, many issues will arise because of
-
-
-
-
-Montenegro, et al.      Expires December 26, 2016               [Page 6]
-
-Internet-Draft               HTTP/2 for IoT                    June 2016
-
-
       this (e.g., discovery of serious flaws in IoT devices like locks
       is a common occurrence).
 
@@ -377,15 +386,6 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
    (e.g., IP, UDP, DTLS).  Other components are still being custom built
    (albeit, on top of IP).
 
-4.  HTTP/2 in IoT
-
-   TODO
-
-5.  HTTP/2 over UDP - QUIC
-
-   QUIC (Quick UDP Internet Connections) is a new multiplexed transport
-   protocol designed to run in user space above UDP, optimized for
-
 
 
 
@@ -394,6 +394,14 @@ Montenegro, et al.      Expires December 26, 2016               [Page 7]
 Internet-Draft               HTTP/2 for IoT                    June 2016
 
 
+4.  HTTP/2 in IoT
+
+   TODO
+
+5.  HTTP/2 over UDP - QUIC
+
+   QUIC (Quick UDP Internet Connections) is a new multiplexed transport
+   protocol designed to run in user space above UDP, optimized for
    HTTP/2 semantics.  The protocol is still in its early days and the
    standardization work in IETF has just started.
 
@@ -430,15 +438,7 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
    This mapping will accommodate the extension mechanisms defined in the
    HTTP/2 specification.
 
-6.  Profile of HTTP/2 for IoT
 
-   HTTP/2 has many negotiable settings that can improve its performance
-   for IoT applications by reducing bandwidth, codespace, and RAM
-   requirements.  Specifically, the following settings and values have
-   been found to be useful in IoT applications:
-
-   o  SETTINGS_ENABLE_PUSH: this functionality may not be required in
-      some IoT applications
 
 
 
@@ -449,6 +449,16 @@ Montenegro, et al.      Expires December 26, 2016               [Page 8]
 
 Internet-Draft               HTTP/2 for IoT                    June 2016
 
+
+6.  Profile of HTTP/2 for IoT
+
+   HTTP/2 has many negotiable settings that can improve its performance
+   for IoT applications by reducing bandwidth, codespace, and RAM
+   requirements.  Specifically, the following settings and values have
+   been found to be useful in IoT applications:
+
+   o  SETTINGS_ENABLE_PUSH: this functionality may not be required in
+      some IoT applications
 
    o  SETTINGS_HEADER_TABLE_SIZE: this setting allows hosts to limit the
       size of the header compression table used for decoding, reducing
@@ -488,6 +498,14 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
    connections.  As each connection has associated overhead, as well as
    overhead for each stream, constrained hosts may wish to limit their
    number of simultaneous connections.  However, implementers should
+
+
+
+Montenegro, et al.      Expires December 26, 2016               [Page 9]
+
+Internet-Draft               HTTP/2 for IoT                    June 2016
+
+
    consider that some popular browsers require more than one connection
    to operate.
 
@@ -497,15 +515,6 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
    contains mechanisms such as PING to periodically check idle
    connections.  Leaving established connections open when there is a
    possibility of future communication allows connection establishment
-
-
-
-
-Montenegro, et al.      Expires December 26, 2016               [Page 9]
-
-Internet-Draft               HTTP/2 for IoT                    June 2016
-
-
    overhead (and potentially TLS session establishment overhead) to be
    avoided.
 
@@ -543,15 +552,6 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
    containing an XML representation of a simple switch using HTTP/1.1
    and HTTP/2.
 
-10.1.1.  HTTP/1.1
-
-   1.  Client sends (47 octets):
-
-   4745 5420 2f6f 6e6f 6666 2048 5454 502f 312e 310d
-   0a48 6f73 743a 2066 6f6f 0d0a 4163 6365 7074 3a20
-   2a2f 2a0d 0a0d 0a
-
-       In ASCII:
 
 
 
@@ -561,6 +561,16 @@ Montenegro, et al.      Expires December 26, 2016              [Page 10]
 
 Internet-Draft               HTTP/2 for IoT                    June 2016
 
+
+10.1.1.  HTTP/1.1
+
+   1.  Client sends (47 octets):
+
+   4745 5420 2f6f 6e6f 6666 2048 5454 502f 312e 310d
+   0a48 6f73 743a 2066 6f6f 0d0a 4163 6365 7074 3a20
+   2a2f 2a0d 0a0d 0a
+
+       In ASCII:
 
    GET /onoff HTTP/1.1\r\n
    Host: foo\r\n
@@ -599,16 +609,6 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
 
        Representing:
 
-   :method: GET
-   :path: /onoff
-   :scheme: http
-   :authority: foo
-   accept: */*
-
-   2.  Server sends (54 octets):
-
-
-
 
 
 
@@ -617,6 +617,14 @@ Montenegro, et al.      Expires December 26, 2016              [Page 11]
 
 Internet-Draft               HTTP/2 for IoT                    June 2016
 
+
+   :method: GET
+   :path: /onoff
+   :scheme: http
+   :authority: foo
+   accept: */*
+
+   2.  Server sends (54 octets):
 
    0000 2d01 0400 0000 01
    880f 1296 d07a be94 03ea 681d 8a08 016d 4039 704e
@@ -654,6 +662,18 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
    multiple streams reduces connection establishment overhead, such as
    TCP connection establishment and TLS session establishment.
 
+
+
+
+
+
+
+
+Montenegro, et al.      Expires December 26, 2016              [Page 12]
+
+Internet-Draft               HTTP/2 for IoT                    June 2016
+
+
 11.  Acknowledgements
 
    This document was produced using the xml2rfc tool [RFC2629].
@@ -666,13 +686,6 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
-
-
-
-Montenegro, et al.      Expires December 26, 2016              [Page 12]
-
-Internet-Draft               HTTP/2 for IoT                    June 2016
-
 
    [RFC2616]  Fielding, R., Gettys, J., Mogul, J., Frystyk, H.,
               Masinter, L., Leach, P., and T. Berners-Lee, "Hypertext
@@ -708,6 +721,15 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
               Enabling Technologies, Protocols, and Applications",  ,
               November 2015.
 
+
+
+
+
+Montenegro, et al.      Expires December 26, 2016              [Page 13]
+
+Internet-Draft               HTTP/2 for IoT                    June 2016
+
+
    [Going_Dark]
               "Dont Panic: Making Progress on Going Dark Debate",
               February 2016, <https://cyber.law.harvard.edu/pubrelease/
@@ -719,16 +741,6 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
               <http://www.theguardian.com/technology/2016/feb/09/
               internet-of-things-smart-home-devices-government-
               surveillance-james-clapper>.
-
-
-
-
-
-
-Montenegro, et al.      Expires December 26, 2016              [Page 13]
-
-Internet-Draft               HTTP/2 for IoT                    June 2016
-
 
 Authors' Addresses
 
@@ -754,18 +766,6 @@ Authors' Addresses
    General Electric
 
    Email: rsimpson@gmail.com
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
