@@ -47,6 +47,13 @@
       </address>
     </author>
     
+    <author initials="R." surname="Simpson" fullname="Robby Simpson">
+      <organization>General Electric</organization>
+        <address>
+          <email>rsimpson@gmail.com</email>
+        </address>
+    </author>
+    
     <date month="June" year="2016" />
     <area>Applications</area>
     <keyword>HTTP, IoT</keyword>
@@ -312,8 +319,15 @@ and middleware. It is a compact, binary protocol, and is very popular in certain
 
 
 <section title="Profile of HTTP/2 for IoT (gab)"> 
-  <t>
-    TODO
+  <t>HTTP/2 has many negotiable settings that can improve its performance for IoT applications by reducing bandwidth, codespace, and RAM requirements. Specifically, the following settings and values have been found to be useful in IoT applications:
+    <list style='symbols'>
+      <t> SETTINGS_ENABLE_PUSH: this functionality may not be required in some IoT applications </t>
+      <t> SETTINGS_HEADER_TABLE_SIZE: this setting allows hosts to limit the size of the header compression table used for decoding, reducing required RAM, but potentially increasing bandwidth requirements </t>
+      <t> SETTINGS_INITIAL_WINDOW_SIZE: this setting allows hosts to limit the flow control window, potentially reducing buffer requirements at the expense of potentially underutilized bandwidth-delay products </t>
+      <t> SETTINGS_MAX_CONCURRENT_STREAMS: this settings allows hosts to limit the number of simulataneous streams for a connection </t>
+      <t> SETTINGS_MAX_FRAME_SIZE: this setting allows hosts to specify the largest frame size they are willing to receive. Somewhat counterintuitively, IoT hosts may wish to leave this value large and rely on flow control to avoid unnecessary framing overhead. </t>
+      <t> SETTINGS_MAX_HEADER_LIST_SIZE: this setting allows hosts to limit the maximum size of the header list they are willing to receive </t>
+    </list>
   </t>
 </section>
 
@@ -330,15 +344,151 @@ and middleware. It is a compact, binary protocol, and is very popular in certain
 </section>
 
 <section title="Implementation Considerations (Sandra)"> 
-  <t>
-    TODO
-  </t>
+  <t> In addition to underlying stack considerations such as IPv4, IPv6, TCP, and TLS implementations, there are several implementation considerations for HTTP/2 for IoT. </t>
+  
+  <t> A primary consideration is the number of allowed simulataneous HTTP/2 connections. As each connection has associated overhead, as well as overhead for each stream, constrained hosts may wish to limit their number of simulataneous connections. However, implementers should consider that some popular browsers require more than one connection to operate. </t>
+
+  <t> In addition to minimizing the number of simulataneous connections, hosts should consider leaving connections open if there is a possibility of further communication with the remote peer. HTTP/2 contains mechanisms such as PING to periodically check idle connections. Leaving established connections open when there is a possibility of future communication allows connection establishment overhead (and potentially TLS session establishment overhead) to be avoided. </t>
+
+  <t> Should TLS be used, implementers may wish to consider utilizing hardware-based encryption to further reduce codespace and RAM requirements. </t>
 </section>
 
 <section title="Experimentation and Performance (?)"> 
-  <t>
-    TODO
+  <t> This section presents some simple results obtained using the Deuterium HTTP/2 library <xref target="Deuterium" /> and is not intended to be complete, but rather a start for discussion. From an IoT perspective, the reduced message sizes presented help to both conserve bandwidth and battery life, as well as potentially saving some memory/buffer space. </t>
+
+  <t> The results presented in this section make the following assumptions and considerations:
+    <list style='symbols'>
+      <t> Overhead from TCP and TLS are ignored </t>
+      <t> An attempt to minimize the headers used has been made while still maintaining RFC compliance </t>
+      <t> No entries are made into the HTTP/2 dynamic table, thus removing some potential optimization </t>
+      <t> Connection establishment and teardown have been ignored, though clearly these are important considerations and differences between the various IoT application protocols </t>
+    </list>
   </t>
+
+  <section title="GET Example"> 
+    <t> This first example compares and contrasts a GET method to a resource containing an XML representation of a simple switch using HTTP/1.1 and HTTP/2. </t>
+    
+    <section title="HTTP/1.1">
+      <t>
+      <list style='numbers'>
+        <t> Client sends (47 octets):
+          <figure>
+            <artwork><![CDATA[
+4745 5420 2f6f 6e6f 6666 2048 5454 502f 312e 310d
+0a48 6f73 743a 2066 6f6f 0d0a 4163 6365 7074 3a20
+2a2f 2a0d 0a0d 0a
+            ]]></artwork>
+          </figure>
+          In ASCII:
+          <figure>
+            <artwork><![CDATA[
+GET /onoff HTTP/1.1\r\n
+Host: foo\r\n
+Accept: */*\r\n
+\r\n
+            ]]></artwork>
+          </figure>
+        </t>
+        <t> Server sends (107 + 36 octets):
+          <figure>
+            <artwork><![CDATA[
+4854 5450 2f31 2e31 2032 3030 204f 4b0d 0a44 6174
+653a 204d 6f6e 2c20 3039 204d 6172 2032 3031 3520
+3036 3a32 363a 3434 2047 4d54 0d0a 436f 6e74 656e
+742d 4c65 6e67 7468 3a20 3336 0d0a 436f 6e74 656e
+742d 5479 7065 3a20 6170 706c 6963 6174 696f 6e2f
+786d 6c0d 0a0d 0a
+3c4f 6e4f 6666 3e0a 093c 7374 6174 653e 6f66 663c
+2f73 7461 7465 3e0a 3c2f 4f6e 4f66 663e 
+            ]]></artwork>
+          </figure>
+          In ASCII:
+          <figure>
+            <artwork><![CDATA[
+HTTP/1.1 200 OK\r\n
+Date: Mon, 09 Mar 2015 06:26:44 GMT\r\n
+Content-Length: 36\r\n
+Content-Type: application/xml\r\n
+\r\n
+<OnOff>\n
+\t<state>off</state>\n
+</OnOff>
+            ]]></artwork>
+          </figure>
+        </t>
+      </list>
+      </t>
+    </section>
+    
+    <section title="HTTP/2">
+      <t>
+      <list style='numbers'>
+        <t> Client sends (34 octets):
+          <figure>
+            <artwork><![CDATA[
+0000 1901 0500 0000 01
+8286 0585 60f5 1e59 7f01 8294 e70f 0489 f963 e7ef
+b401 5c00 07
+            ]]></artwork>
+          </figure>
+          Representing:
+          <figure>
+            <artwork><![CDATA[
+:method: GET
+:path: /onoff
+:scheme: http
+:authority: foo
+accept: */*
+            ]]></artwork>
+          </figure>
+        </t>
+        <t> Server sends (54 octets):
+          <figure>
+            <artwork><![CDATA[
+0000 2d01 0400 0000 01
+880f 1296 d07a be94 03ea 681d 8a08 016d 4039 704e
+5c69 a531 68df 0f10 8b1d 75d0 620d 263d 4c79 a68f
+0f0d 8265 cf
+            ]]></artwork>
+          </figure>
+          Representing:
+          <figure>
+            <artwork><![CDATA[
+:status: 200
+content-type: application/xml
+content-length: 36
+date: Mon, 09 Mar 2015 06:26:44 GMT
+            ]]></artwork>
+          </figure>
+        </t>
+        <t> Server sends (45 octets):
+          <figure>
+            <artwork><![CDATA[
+0000 2400 0100 0000 01
+3c4f 6e4f 6666 3e0a 093c 7374 6174 653e 6f66 663c
+2f73 7461 7465 3e0a 3c2f 4f6e 4f66 663e
+            ]]></artwork>
+          </figure>
+          Representing:
+          <figure>
+            <artwork><![CDATA[
+<OnOff>
+\t<state>off</state>
+</OnOff>
+            ]]></artwork>
+          </figure>
+        </t>
+      </list>
+      </t>
+    </section>
+    <section title="Comparison">
+      <t> In total and ignoring the payload (36 octets), the HTTP/2 flow is 37% smaller than the HTTP/1.1 flow. </t>
+      
+      <t> The use of additional headers, particularly common headers that are present in the HTTP/2 static table, will result in greater savings. </t>
+      
+      <t> While not compared here, HTTP/2's ability to reuse connections for multiple streams results in connection establishment overhead, such as TCP connection establishment and TLS session establishment, diminishing. </t>
+    </section>
+  </section>
 </section>
 
 
@@ -363,6 +513,14 @@ and middleware. It is a compact, binary protocol, and is very popular in certain
 
    <references title="Informative References">
       &RFC2629;
+      
+      <reference anchor="Deuterium" target="http://robbysimpson.org/deuterium/">
+        <front>
+          <title>Deuterium HTTP/2 Library</title>
+          <author initials="R." surname="Simpson" fullname="Robby Simpson" />
+          <date month="June" day="23" year="2016" />
+        </front>
+      </reference>
       
       <reference anchor="Eclipse_survey">
         <front>
@@ -390,7 +548,3 @@ and middleware. It is a compact, binary protocol, and is very popular in certain
    </references>
   </back>
 </rfc>
-
-<!--
-  edited with Visual Studio Code
-  -->
