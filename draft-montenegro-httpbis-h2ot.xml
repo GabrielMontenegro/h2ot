@@ -237,8 +237,8 @@ resource constrained devices and unreliable networks.
 
  
       In addition, CoAP may interact easily with HTTP through a proxy thanks to the common REST architecture. CoAP works on port 5683 and offers optional reliable 
-      delivery (thru a retransmission mechanism), support for unicast and multicast (which satisfies group communication for IoT), and asynchronous message exchange using simple and low complexity headers (a typical CoAP message can be between 
-      10 and 20 bytes). 
+      delivery (thru a retransmission mechanism), support for unicast and multicast (which satisfies group communication for IoT), and asynchronous message exchange 
+      using simple and low complexity headers (a typical CoAP message can be between 10 and 20 bytes). 
       </t>
       <t>
       It is the third most popular protocol in the survey with a 21% preference. Nevertheless, since CoAP is UDP-based, it also suffers from firewall traversal issues and lack of integration with existing enterprise infrastructures. There is ongoing work to specify the use of CoAP over TCP as well as CoAP over TLS, in an attempt to overcome issues with middleboxes and achieve a better integration with web environments.
@@ -248,7 +248,11 @@ resource constrained devices and unreliable networks.
     
  <section title="Protocols Comparison"> 
 	<t>
-    The aformentioned protocols have been compared in both experimental and emulated environments. Previous reports show that performance is highly dependent on the network conditions <xref target="IEEE_survey"></xref>: in good link conditions with low packet loss, MQTT delivers packets with lower delay than CoAP; however, if packet loss is under 25% and messages are of a small size, CoAP demonstrates a better link usage than MQTT. CoAP has also been compared to HTTP/1.1. In terms of power consumption and response time, naturally CoAP behaves better than HTTP/1.1 thanks to the reduced packet sizes. No reports have been found comparing MQTT or CoAP to HTTP/2.
+    The aformentioned protocols have been compared in both experimental and emulated environments. Previous reports show that performance is highly dependent 
+    on the network conditions <xref target="IEEE_survey"></xref>: in good link conditions with low packet loss, MQTT delivers packets with lower delay than CoAP; 
+     however, if packet loss is under 25% and messages are of a small size, CoAP demonstrates a better link usage than MQTT. CoAP has also been compared to HTTP/1.1. 
+     In terms of power consumption and response time, naturally CoAP behaves better than HTTP/1.1 thanks to the reduced packet sizes. No reports have been found 
+     comparing MQTT or CoAP to HTTP/2.
     </t>
  </section>
    
@@ -258,7 +262,8 @@ resource constrained devices and unreliable networks.
   <t>
     These protocols often do not exist in a vacuum. Typically, they are mandated as part of a given stack specified by
     any of several IoT consortia (e.g., OFC, AllJoyn, Thread Group, etc). We know that these multiple IoT protocols
-    (and stacks) provide very useful sources of information for prying eyes (See “US intelligence chief says we might use the IoT to spy on you” at http://www.wired.com/2012/03/petraeus-tv-remote/). Security and privacy issues are exacerbated because:
+    (and stacks) provide very useful sources of information for prying eyes (See “US intelligence chief says we might use the IoT to spy on you” 
+    at http://www.wired.com/2012/03/petraeus-tv-remote/). Security and privacy issues are exacerbated because:
     
   <list style='symbols'>
 		<t> 
@@ -275,16 +280,26 @@ resource constrained devices and unreliable networks.
     
    <list style='hanging'>
 		<t hangText="A security and privacy environment even more challenging than usual:"> 
-			This is receiving much attention from the research and standardization communities. It is the sort of challenge that stimulates researchers into high gear. It is a daunting problem for sure, but at least it is on the radar of folks and consortia working on IoT. Nevertheless, many issues will arise because of this (e.g., discovery of serious flaws in IoT devices like locks is a common occurrence).
+			This is receiving much attention from the research and standardization communities. It is the sort of challenge that stimulates researchers 
+                        into high gear. It is a daunting problem for sure, but at least it is on the radar of folks and consortia working on IoT. Nevertheless, 
+                        many issues will arise because of this (e.g., discovery of serious flaws in IoT devices like locks is a common occurrence).
 		</t>
 		<t hangText="Many different protocol stacks at play:"> 
 			This is a much more worrisome issue if one considers that a vast majority of issues arising with security have less to do with cryptography
-      (the first point above) and more to do with software engineering, and silly bugs. Each stack added creates more attack surface. At the same time, each one of these stacks gather less attention and scrutiny than software used for mainstream scenarios (such as the web). We have seen no shortage of issues on OpenSSL and similar heavily-used software. We can expect much worse from stacks that are not nearly as well exercised nor examined. And if we have not one, but several of these stacks untested by millions of eyeballs, we are inviting disaster.
+      (the first point above) and more to do with software engineering, and silly bugs. Each stack added creates more attack surface. At the same time, 
+     each one of these stacks gather less attention and scrutiny than software used for mainstream scenarios (such as the web). We have seen no shortage of issues 
+     on OpenSSL and similar heavily-used software. We can expect much worse from stacks that are not nearly as well exercised nor examined. And if we have not one, 
+      but several of these stacks untested by millions of eyeballs, we are inviting disaster.
 		</t>
 	</list> 
   </t>
   <t>
-    Furthermore, multiple stacks defeat the purpose of the “I” in IoT: interoperability.  This goes back to the issue of security. A recent Harvard report on the state of surveillance and erosion of privacy <xref target="Going_Dark"></xref> concludes among its findings that the projected substantial growth of IoT will drastically change surveillance (surveillance is not merely limited to government agencies of course), and that the fragmentation of ecosystems hinders the deployment of countermeasures (e.g., end-to-end encryption) as that requires more coordination and standardization than currently available. This not only gives rise to rogue surveillance sites such as Shodan (https://www.shodan.io/), but also represents a great opportunity for government agencies’ surveillance needs <xref target="Going_Dark"></xref>. 
+    Furthermore, multiple stacks defeat the purpose of the “I” in IoT: interoperability. This goes back to the issue of security. A recent Harvard report on the state 
+    of surveillance and erosion of privacy <xref target="Going_Dark"></xref> concludes among its findings that the projected substantial growth of IoT will drastically
+    change surveillance (surveillance is not merely limited to government agencies of course), and that the fragmentation of ecosystems hinders the deployment of 
+    countermeasures (e.g., end-to-end encryption) as that requires more coordination and standardization than currently available. This not only gives rise to rogue 
+    surveillance sites such as Shodan (https://www.shodan.io/), but also represents a great opportunity for government agencies’ surveillance needs 
+    <xref target="Going_Dark"></xref>. 
   </t>
   <t>
     Reusing mainstream protocols affords the benefits of using better-known technology, with easier access to reference implementations (including open source), hiring of people with the required skills and experience, training, etc. They are basically the same arguments that were used originally to justify the use of IP-based networking over custom-built stacks. The message was heard loud and clear but for the most part it was applied to only a limited set of components (e.g., IP, UDP, DTLS). Other components are still being custom built (albeit, on top of IP). 
@@ -324,8 +339,11 @@ resource constrained devices and unreliable networks.
    is plugable in QUIC.</t> 
 
    <t>Even if QUIC has been initially designed with HTTP/2 as the primary application protocol to support, it is meant to become a modern general-purpose transport
-    protocol. The IETF standization effort will also focus on describing the mapping of HTTP/2 semantics using QUIC specifically with the goal of minimizing web latency using QUIC. 
-    This mapping will accommodate the extension mechanisms defined in the HTTP/2 specification. </t>
+    protocol. The IETF standization effort will also focus on describing the mapping of HTTP/2 semantics using QUIC specifically with the goal of minimizing web 
+    latency using QUIC. This mapping will accommodate the extension mechanisms defined in the HTTP/2 specification.</t>
+
+   <t>QUIC also dictates that packets should be sized to fit within the path's MTU to avoid IP fragmentation. However path MTU discovery is a work in
+   progress, and the current QUIC implementation uses a 1350-byte maximum QUIC packet size for IPv6, 1370 for IPv4.</t>
 
 </section>
 
@@ -350,10 +368,23 @@ resource constrained devices and unreliable networks.
   </t>
 </section>
 
-<section title="Gateway and Proxying Issues (Salvatore)"> 
-  <t>
-    TODO
-  </t>
+<section title="Gateway and Proxying Issues"> 
+
+  <t>The proliferation of application and security protocols in the IoT has produced the deployments of island of IoT device each using one of the several protocols
+     available. However those usually an IoT deployment need to communicate to another one, or at least need to communicate with the Web both because they have to upload
+     data to the Cloud or because usually they are controlled by a Web application.</t>
+
+  <t>The need to communicate is facilitated by Cross-protocol proxy or gateway translating a protocol syntax and semantic in another one. However the presence of 
+     Cross-Protocol or Application gateways has at least to main drawbacks that need to be analyzed and addressed carefully.
+
+      <list style='symbols'>
+		<t> while the translation maybe trivial for the basic scenarios, there are a lot of cases where the translation can lead to a lost of information
+                    or an incompatibility due to the different way differnt proxies make the translation.</t>
+
+		<t> The presence of a Cross-Protocol may also become a critical point for the security.</t>
+	</list>
+     </t> 
+
 </section>
 
 <section title="Implementation Considerations"> 
