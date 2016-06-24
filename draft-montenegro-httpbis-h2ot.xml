@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
   <!ENTITY RFC0793 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.0793.xml'>
   <!ENTITY RFC1738 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.1738.xml'>
@@ -71,12 +71,12 @@ This document makes the case for HTTP/2 for IoT.
     When the IETF started work on IoT with the 6lowpan WG, it was clear that in addition to the lower-layer adaptation work 
     for IPv6, much work elsewhere in the stack was necessary. (In this
     document, the "things" in "IoT" are nodes that are constrained in some manner--e.g., cpu, memory, power--such that direct 
-    use of unmodified mainstream protocols is challenging.)Once the IPv6 adaptation was understood, the next questions 
+    use of unmodified mainstream protocols is challenging.) Once the IPv6 adaptation was understood, the next questions 
     were what protocols to use above IP for different functions and at different layers. 
     That question may not have a single answer that is always best for all scenarios and use
-    cases. There are many such use cases, in accordance with the fact that "IoT" means too many things. 
-    
+    cases. There are many such use cases, in accordance with the fact that "IoT" means too many things.     
 </t>
+
 <t> 
     Accordingly, the IoT landscape includes a proliferation of options for any particular functionality 
     (transport, encoding, security suites, authentication/authorization, etc). 
@@ -86,11 +86,13 @@ This document makes the case for HTTP/2 for IoT.
     hence, amplifying the attack surface. Nevertheless, properly configured and implemented, 
     mainstream options may not just be workable, but may even be the best option. 
 </t>
+
 <t> 
     HTTP/2 is now widely available as a transport option. Moreover, the ongoing effort to layer HTTP/2 
     over UDP (i.e., over QUIC) adds a useful capability for IoT scenarios. We show the current suitability of 
     HTTP/2 for IoT scenarios and examine possible improvements.    
     </t>
+
     <t>
     Let's look at some application communication patterns to establish some
     common language:
@@ -195,8 +197,9 @@ This document makes the case for HTTP/2 for IoT.
     <section title="MQTT"> 
 		<t> 
       MQ Telemetry Transport (MQTT) is a publish/subscribe messaging protocol running on top of TCP. It was created by IBM, now being standardized
-      by OASIS. It is popular in the internet scenario (node to cloud, gateway to cloud) and it aims to connect embedded devices and networks with applications
-and middleware. It is a compact, binary protocol, and is very popular in certain application domains. It has been known as a protocol suitable to be used in resource constrained devices and unreliable networks.
+      by OASIS. It is popular in the Internet scenario (node to cloud, gateway to cloud) and it aims to connect embedded devices and networks with applications
+and middleware. It is a compact, binary protocol, and is very popular in certain application domains. It has been known as a protocol suitable to be used in 
+resource constrained devices and unreliable networks.
 		</t>
 
 		<t>       
@@ -220,7 +223,19 @@ and middleware. It is a compact, binary protocol, and is very popular in certain
 
 
       <t>
-      The protocol meets IoT requirements through the modification of some HTTP functionalities to achieve low-power consumption and operation over lossy links. 
+      The protocol meets IoT requirements through the modification of some HTTP functionalities to achieve low-power consumption and operation over lossy links.
+      To aovid undesirable packet fragmentation the CoAP specification provides also an upper bound to the message size, dictating that a CoAP message,
+      appropriately encapsulated, SHOULD fit within a single IP datagram
+
+      <list style='hanging'>
+		<t>
+                  If the Path MTU is not known for a destination, an IP MTU of 1280 bytes SHOULD be assumed; if nothing is known about the size of the
+                  headers, good upper bounds are 1152 bytes for the message size and 1024 bytes for the payload size. 
+		</t>
+      </list>
+   
+
+ 
       In addition, CoAP may interact easily with HTTP through a proxy thanks to the common REST architecture. CoAP works on port 5683 and offers optional reliable 
       delivery (thru a retransmission mechanism), support for unicast and multicast (which satisfies group communication for IoT), and asynchronous message exchange using simple and low complexity headers (a typical CoAP message can be between 
       10 and 20 bytes). 
