@@ -79,14 +79,29 @@ This document makes the case for HTTP/2 for IoT.
 
 <t> 
     Accordingly, the IoT landscape includes a proliferation of options for any particular functionality 
-    (transport, encoding, security suites, authentication/authorization, etc). 
-    Many of these are being created expressly for IoT (within the IETF and elsewhere) with the 
+    (transport, encoding, security suites, authentication/authorization, etc). Different vendors and standards
+    organizations (or fora) offer IoT solutions by grouping these different components into separate stacks.
+    Even if the components have the same name or come from the same original standard, each organization adapts it 
+    ever so slightly to their own goals rendering the resultant components non-interoperable. 
+    Many of these components are being created expressly for IoT (within the IETF and elsewhere) with the 
     justification that the mainstream options could not possibly be usable for IoT scenarios, 
-    which results in multiple disparate networking and software stacks. This adds complexity to IoT,
+    which results in multiple disparate networking and software stacks. Given the incipient state of IoT,
+    for the foreseeable future multiple competing stacks will continue to exist at least in gateways and 
+    cloud elements.
+    This adds complexity to IoT,
     hence, amplifying the attack surface. Nevertheless, properly configured and implemented, 
     mainstream options may not just be workable, but may even be the best option. 
 </t>
 
+<t> 
+    The appearance of a one-off stack (as opposed to a properly configured and adapted mainstream stack) is reminiscent of 
+    WAP 1.x, a complete vertical stack offered for phones as they were starting to get on the internet in the late 90's. At 
+    that time the IETF and the W3C started efforts to develop the mainstream alternatives and today no phone uses WAP. Phone 
+    stacks are mainstream TCP/IP protocols (properly configured and adapted, of course). Today, we don't just see one non-mainstream
+    stack in IoT, but several. It's as if we had WAP1, WAP2, WAP3, etc. And we may have to live with them for some time,
+    but it is essential to ponder what the mainstream stack might look like if we are to eventually reap the benefits of 
+    a true Internet of Things instead of a not-quite-but-kinda-close-to-Internet-non-interoperable-hodge-podge-of-Things.
+</t>
 <t> 
     HTTP/2 is now widely available as a transport option. Moreover, the ongoing effort to layer HTTP/2 
     over UDP (i.e., over QUIC) adds a useful capability for IoT scenarios. We show the current suitability of 
