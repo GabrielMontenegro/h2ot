@@ -71,21 +71,21 @@ Table of Contents
      2.4.  Protocols Comparison  . . . . . . . . . . . . . . . . . .   7
    3.  Importance of Protocol Reuse  . . . . . . . . . . . . . . . .   7
    4.  HTTP/2 in IoT . . . . . . . . . . . . . . . . . . . . . . . .   9
-   5.  HTTP/2 over UDP - QUIC  . . . . . . . . . . . . . . . . . . .  10
-   6.  Profile of HTTP/2 for IoT . . . . . . . . . . . . . . . . . .  11
-   7.  Negotiation of HTTP/2 for IoT . . . . . . . . . . . . . . . .  11
-   8.  Gateway and Proxying Issues . . . . . . . . . . . . . . . . .  11
-   9.  Implementation Considerations . . . . . . . . . . . . . . . .  12
-   10. Experimentation and Performance . . . . . . . . . . . . . . .  12
-     10.1.  GET Example  . . . . . . . . . . . . . . . . . . . . . .  13
-       10.1.1.  HTTP/1.1 . . . . . . . . . . . . . . . . . . . . . .  13
-       10.1.2.  HTTP/2 . . . . . . . . . . . . . . . . . . . . . . .  14
-       10.1.3.  Comparison . . . . . . . . . . . . . . . . . . . . .  15
+   5.  Profile of HTTP/2 for IoT . . . . . . . . . . . . . . . . . .  10
+   6.  Negotiation of HTTP/2 for IoT . . . . . . . . . . . . . . . .  10
+   7.  Gateway and Proxying Issues . . . . . . . . . . . . . . . . .  10
+   8.  Implementation Considerations . . . . . . . . . . . . . . . .  11
+   9.  Experimentation and Performance . . . . . . . . . . . . . . .  11
+     9.1.  GET Example . . . . . . . . . . . . . . . . . . . . . . .  12
+       9.1.1.  HTTP/1.1  . . . . . . . . . . . . . . . . . . . . . .  12
+       9.1.2.  HTTP/2  . . . . . . . . . . . . . . . . . . . . . . .  13
+       9.1.3.  Comparison  . . . . . . . . . . . . . . . . . . . . .  14
+   10. HTTP/2 over UDP - QUIC  . . . . . . . . . . . . . . . . . . .  14
    11. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  15
    12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
      12.1.  Normative References . . . . . . . . . . . . . . . . . .  15
-     12.2.  Informative References . . . . . . . . . . . . . . . . .  16
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  17
+     12.2.  Informative References . . . . . . . . . . . . . . . . .  15
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  16
 
 1.  Introduction
 
@@ -263,7 +263,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 2.2.  MQTT
 
    MQ Telemetry Transport (MQTT) is a publish/subscribe messaging
-   protocol running on top of TCP.  It was created by IBM, now being
+   protocol that runs on top of TCP.  It was created by IBM, now being
    standardized by OASIS.  It is popular in the Internet scenario (node
    to cloud, gateway to cloud) and it aims to connect embedded devices
    and networks with applications and middleware.  It is a compact,
@@ -355,16 +355,16 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
    Coexistence among the protocols has also been tested with varied
    network configurations.  For the most part, interaction of CoAP with
-   HTTP has been studied [Web_things], demonstrating successfull
-   exchange when there is a CoAP server running on a constrained node
-   and the HTTP client is requesting resources from it, or when there is
-   a CoAP client requesting resources from an HTTP server.  In both
-   cases a proxy is necessary to enable translation between the
-   protocols.  Another network configuration with a CoAP client - CoAP
-   proxy - CoAP server has been compared to the CoAP client - CoAP/HTTP
-   proxy - HTTP server configuration, in which case the response times
-   of the only-CoAP configuration resulted to be lower even when the
-   number of concurrent requests increases [CoAP_integration].
+   HTTP has been studied [Web_things], demonstrating successful exchange
+   when there is a CoAP server running on a constrained node and the
+   HTTP client is requesting resources from it, or when there is a CoAP
+   client requesting resources from an HTTP server.  In both cases a
+   proxy is necessary to enable translation between the protocols.
+   Another network configuration with a CoAP client - CoAP proxy - CoAP
+   server has been compared to the CoAP client - CoAP/HTTP proxy - HTTP
+   server configuration, in which case the response times of the only-
+   CoAP configuration resulted to be lower even when the number of
+   concurrent requests increases [CoAP_integration].
 
    No reports have been found comparing MQTT or CoAP to HTTP/2.
 
@@ -506,63 +506,7 @@ Montenegro, et al.       Expires January 2, 2017                [Page 9]
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
-5.  HTTP/2 over UDP - QUIC
-
-   QUIC (Quick UDP Internet Connections) is a new multiplexed transport
-   protocol designed to run in user space above UDP, optimized for
-   HTTP/2 semantics.  The protocol is still in its early days and the
-   standardization work in IETF has just started.
-
-   QUIC provides several functionalities already present in TCP, TLS and
-   HTTP/2
-
-   o  connection semantics, reliability, and congestion control
-      equivalent to TCP.
-
-   o  security equivalent to TLS
-
-   o  multiplexing and flow control equivalent to HTTP/2
-
-   Where functionality is similar to that of existing protocols, it has
-   been re-designed to be more efficient.
-
-   To improve the Connection Establishement latency QUIC combines the
-   crypto and transport handshakes, reducing the number of roundtrips
-   required for setting up a secure connection.  QUIC connections are
-   commonly 0-RTT, meaning that on most QUIC connections, data can be
-   sent immediately without waiting for a reply from the server, as
-   compared to the 1-3 roundtrips required for TCP+TLS before
-   application data can be sent.
-
-   QUIC has been designed to provide richer information to congestion
-   control algorithms than TCP, moreover the actual congestion control
-   is plugable in QUIC.
-
-   Even if QUIC has been initially designed with HTTP/2 as the primary
-   application protocol to support, it is meant to become a modern
-   general-purpose transport protocol.  The IETF standardization effort
-   will also focus on describing the mapping of HTTP/2 semantics using
-   QUIC specifically with the goal of minimizing web latency using QUIC.
-   This mapping will accommodate the extension mechanisms defined in the
-   HTTP/2 specification.
-
-   QUIC also dictates that packets should be sized to fit within the
-   path's MTU to avoid IP fragmentation.  However path MTU discovery is
-   a work in progress, and the current QUIC implementation uses a
-   1350-byte maximum QUIC packet size for IPv6, 1370 for IPv4.
-
-
-
-
-
-
-
-Montenegro, et al.       Expires January 2, 2017               [Page 10]
-
-Internet-Draft               HTTP/2 for IoT                    July 2016
-
-
-6.  Profile of HTTP/2 for IoT
+5.  Profile of HTTP/2 for IoT
 
    HTTP/2 has many negotiable settings that can improve its performance
    for IoT applications by reducing bandwidth, codespace, and RAM
@@ -583,7 +527,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
       products
 
    o  SETTINGS_MAX_CONCURRENT_STREAMS: this settings allows hosts to
-      limit the number of simulataneous streams for a connection
+      limit the number of simultaneous streams for a connection
 
    o  SETTINGS_MAX_FRAME_SIZE: this setting allows hosts to specify the
       largest frame size they are willing to receive.  Somewhat
@@ -593,11 +537,11 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
    o  SETTINGS_MAX_HEADER_LIST_SIZE: this setting allows hosts to limit
       the maximum size of the header list they are willing to receive
 
-7.  Negotiation of HTTP/2 for IoT
+6.  Negotiation of HTTP/2 for IoT
 
    TODO
 
-8.  Gateway and Proxying Issues
+7.  Gateway and Proxying Issues
 
    The proliferation of application and security protocols in the IoT
    has produced the deployments of islands of IoT devices, each using
@@ -607,33 +551,33 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
    the Cloud or because usually they are controlled by a Web
    application.
 
-   The need to communicate is facilitated by a Cross-protocol proxy or a
-   gateway translating a protocol syntax and semantic into another one.
-   However, the presence of Cross-Protocol or Application gateways has
+   In such cases, communication is facilitated by a cross-protocol proxy
+   or a gateway translating from one protocol syntax and semantic into
+   another one.  However, the presence of Cross-Protocol or Application
 
 
 
-Montenegro, et al.       Expires January 2, 2017               [Page 11]
+Montenegro, et al.       Expires January 2, 2017               [Page 10]
 
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
-   at least two main drawbacks that need to be analyzed and addressed
-   carefully.
+   gateways has at least two main drawbacks that need to be analyzed and
+   addressed carefully.
 
    o  while the translation may be trivial for the basic scenarios,
-      there are a lot of cases where the translation can lead to a lost
-      of information or an incompatibility due to the different way
+      there are a lot of cases where the translation can lead to
+      information loss or an incompatibility due to the different way
       different proxies make the translation.
 
-   o  The presence of a Cross-Protocol may also become a critical point
-      for the security.
+   o  The presence of such devices may also become a critical point for
+      security.
 
-9.  Implementation Considerations
+8.  Implementation Considerations
 
-   In addition to underlying stack considerations such as IPv4, IPv6,
-   TCP, and TLS implementations, there are several implementation
-   considerations for HTTP/2 for IoT.
+   In addition to underlying stack considerations with respect to IPv4,
+   IPv6, TCP, and TLS, there are implementation considerations for
+   HTTP/2 for IoT.
 
    A primary consideration is the number of allowed simultaneous HTTP/2
    connections.  As each connection has associated overhead, as well as
@@ -655,7 +599,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
    hardware-based encryption to further reduce codespace and RAM
    requirements.
 
-10.  Experimentation and Performance
+9.  Experimentation and Performance
 
    This section presents some simple results obtained using the
    Deuterium HTTP/2 library [Deuterium] and is not intended to be
@@ -669,7 +613,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
 
-Montenegro, et al.       Expires January 2, 2017               [Page 12]
+Montenegro, et al.       Expires January 2, 2017               [Page 11]
 
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
@@ -686,13 +630,13 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
       clearly these are important considerations for IoT application
       protocols
 
-10.1.  GET Example
+9.1.  GET Example
 
    This first example compares and contrasts a GET method to a resource
    containing an XML representation of a simple switch using HTTP/1.1
    and HTTP/2.
 
-10.1.1.  HTTP/1.1
+9.1.1.  HTTP/1.1
 
    1.  Client sends (47 octets):
 
@@ -725,7 +669,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
 
-Montenegro, et al.       Expires January 2, 2017               [Page 13]
+Montenegro, et al.       Expires January 2, 2017               [Page 12]
 
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
@@ -739,7 +683,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
    \t<state>off</state>\n
    </OnOff>
 
-10.1.2.  HTTP/2
+9.1.2.  HTTP/2
 
    1.  Client sends (34 octets):
 
@@ -781,7 +725,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
 
-Montenegro, et al.       Expires January 2, 2017               [Page 14]
+Montenegro, et al.       Expires January 2, 2017               [Page 13]
 
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
@@ -790,7 +734,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
    \t<state>off</state>
    </OnOff>
 
-10.1.3.  Comparison
+9.1.3.  Comparison
 
    In total and ignoring the payload (36 octets), the HTTP/2 flow is 37%
    smaller than the HTTP/1.1 flow.
@@ -801,6 +745,57 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
    While not compared here, HTTP/2's ability to reuse connections for
    multiple streams reduces connection establishment overhead, such as
    TCP connection establishment and TLS session establishment.
+
+10.  HTTP/2 over UDP - QUIC
+
+   QUIC (Quick UDP Internet Connections) is a new multiplexed transport
+   protocol designed to run in user space above UDP, optimized for
+   HTTP/2 semantics.  The protocol is still in its early days and the
+   standardization work in IETF has just started.
+
+   QUIC provides functionality already present in TCP, TLS and HTTP/2
+
+   o  connection semantics, reliability, and congestion control
+      equivalent to TCP.
+
+   o  security equivalent to TLS
+
+   o  multiplexing and flow control equivalent to HTTP/2
+
+   Where functionality is similar to that of existing protocols, it has
+   been re-designed to be more efficient.
+
+   To improve connection establishment latency QUIC combines the crypto
+   and transport handshakes, reducing the number of roundtrips required
+   to set up a secure connection.  QUIC connections are commonly 0-RTT,
+   meaning that on most QUIC connections, data can be sent immediately
+   without waiting for a reply from the server, as compared to the 1-3
+   roundtrips required for TCP+TLS before application data can be sent.
+
+   QUIC has been designed to provide richer information to congestion
+   control algorithms than TCP, moreover the actual congestion control
+   is plugable in QUIC.
+
+   Even if QUIC has been initially designed with HTTP/2 as the primary
+   application protocol to support, it is meant to become a modern
+
+
+
+Montenegro, et al.       Expires January 2, 2017               [Page 14]
+
+Internet-Draft               HTTP/2 for IoT                    July 2016
+
+
+   general-purpose transport protocol.  The IETF standardization effort
+   will also focus on describing the mapping of HTTP/2 semantics using
+   QUIC specifically with the goal of minimizing web latency using QUIC.
+   This mapping will accommodate the extension mechanisms defined in the
+   HTTP/2 specification.
+
+   QUIC also dictates that packets should be sized to fit within the
+   path's MTU to avoid IP fragmentation.  However path MTU discovery is
+   work in progress, and the current QUIC implementation uses a
+   1350-byte maximum QUIC packet size for IPv6, 1370 for IPv4.
 
 11.  Acknowledgements
 
@@ -831,6 +826,11 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
               DOI 10.17487/RFC7231, June 2014,
               <http://www.rfc-editor.org/info/rfc7231>.
 
+12.2.  Informative References
+
+   [RFC2629]  Rose, M., "Writing I-Ds and RFCs using XML", RFC 2629,
+              DOI 10.17487/RFC2629, June 1999,
+              <http://www.rfc-editor.org/info/rfc2629>.
 
 
 
@@ -841,12 +841,6 @@ Montenegro, et al.       Expires January 2, 2017               [Page 15]
 
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
-
-12.2.  Informative References
-
-   [RFC2629]  Rose, M., "Writing I-Ds and RFCs using XML", RFC 2629,
-              DOI 10.17487/RFC2629, June 1999,
-              <http://www.rfc-editor.org/info/rfc2629>.
 
    [Deuterium]
               Simpson, R., "Deuterium HTTP/2 Library", June 2016,
@@ -890,20 +884,18 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
               internet-of-things-smart-home-devices-government-
               surveillance-james-clapper>.
 
-
-
-
-Montenegro, et al.       Expires January 2, 2017               [Page 16]
-
-Internet-Draft               HTTP/2 for IoT                    July 2016
-
-
 Authors' Addresses
 
    Gabriel Montenegro
    Microsoft
 
    Email: Gabriel.Montenegro@microsoft.com
+
+
+
+Montenegro, et al.       Expires January 2, 2017               [Page 16]
+
+Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
    Sandra Cespedes
@@ -922,6 +914,14 @@ Authors' Addresses
    General Electric
 
    Email: rsimpson@gmail.com
+
+
+
+
+
+
+
+
 
 
 

@@ -215,7 +215,7 @@ This document makes the case for HTTP/2 for IoT.
 
     <section title="MQTT"> 
 		<t> 
-      MQ Telemetry Transport (MQTT) is a publish/subscribe messaging protocol running on top of TCP. It was created by IBM, now being standardized
+      MQ Telemetry Transport (MQTT) is a publish/subscribe messaging protocol that runs on top of TCP. It was created by IBM, now being standardized
       by OASIS. It is popular in the Internet scenario (node to cloud, gateway to cloud) and it aims to connect embedded devices and networks with applications
 and middleware. It is a compact, binary protocol, and is very popular in certain application domains. It has been known as a protocol suitable to be used in 
 resource constrained devices and unreliable networks.
@@ -269,7 +269,7 @@ resource constrained devices and unreliable networks.
 	<t>
     The aformentioned protocols have been compared in both experimental and emulated environments <xref target="IEEE_survey"></xref>. Previous reports show that performance is highly dependent on the network conditions: in good link conditions with low packet loss, MQTT delivers packets with lower delay than CoAP, but CoAP outperforms when high packet losses are present; in terms of packet sizes, if packet loss is under 25% and messages are of a small size, CoAP demonstrates a better link usage than MQTT. However, other experiments report a better performance of MQTT in hight traffic/high packet loss scenarios  <xref target="IoT_analysis"></xref>. CoAP has also been compared to HTTP/1.1. In terms of power consumption and response time, naturally CoAP behaves better than HTTP/1.1 thanks to the reduced packet sizes.</t>
      
-     <t>Coexistence among the protocols has also been tested with varied network configurations. For the most part, interaction of CoAP with HTTP has been studied <xref target="Web_things"></xref>, demonstrating successfull exchange when there is a CoAP server running on a constrained node and the HTTP client is requesting resources from it, or when there is a CoAP client requesting resources from an HTTP server. In both cases a proxy is necessary to enable translation between the protocols. Another network configuration with a CoAP client - CoAP proxy - CoAP server has been compared to the CoAP client - CoAP/HTTP proxy - HTTP server configuration, in which case the response times of the only-CoAP configuration resulted to be lower even when the number of concurrent requests increases <xref target="CoAP_integration"></xref>. </t>
+     <t>Coexistence among the protocols has also been tested with varied network configurations. For the most part, interaction of CoAP with HTTP has been studied <xref target="Web_things"></xref>, demonstrating successful exchange when there is a CoAP server running on a constrained node and the HTTP client is requesting resources from it, or when there is a CoAP client requesting resources from an HTTP server. In both cases a proxy is necessary to enable translation between the protocols. Another network configuration with a CoAP client - CoAP proxy - CoAP server has been compared to the CoAP client - CoAP/HTTP proxy - HTTP server configuration, in which case the response times of the only-CoAP configuration resulted to be lower even when the number of concurrent requests increases <xref target="CoAP_integration"></xref>. </t>
      
      <t>
      No reports have been found comparing MQTT or CoAP to HTTP/2.
@@ -365,50 +365,13 @@ requires optimizing aspects such as:
   </t>
 </section>
 
-
-<section title="HTTP/2 over UDP - QUIC"> 
-  <t>
-    QUIC (Quick UDP Internet Connections) is a new multiplexed transport protocol designed to run in user space above UDP, optimized for HTTP/2 semantics. The protocol
-    is still in its early days and the standardization work in IETF has just started.</t>
-
-  <t>QUIC provides several functionalities already present in TCP, TLS and HTTP/2
-
-  <list style='symbols'>
-		<t> connection semantics, reliability, and congestion control equivalent to TCP.</t>
-		<t> security equivalent to TLS </t>
-		<t> multiplexing and flow control equivalent to HTTP/2</t>
-	</list>
-
-   </t>
-
-   <t>Where functionality is similar to that of existing protocols, it has been re-designed to be more efficient.</t>
-
-   <t>To improve the Connection Establishement latency QUIC combines the crypto and transport handshakes, reducing the
-   number of roundtrips required for setting up a secure connection. QUIC connections are commonly 0-RTT, meaning that on most QUIC
-   connections, data can be sent immediately without waiting for a reply from the server, as compared to the 1-3 roundtrips required for
-   TCP+TLS before application data can be sent.</t>
-
-   <t>QUIC has been designed to provide richer information to congestion control algorithms than TCP, moreover the actual congestion control
-   is plugable in QUIC.</t> 
-
-   <t>Even if QUIC has been initially designed with HTTP/2 as the primary application protocol to support, it is meant to become a modern general-purpose transport
-    protocol. The IETF standardization effort will also focus on describing the mapping of HTTP/2 semantics using QUIC specifically with the goal of minimizing web 
-    latency using QUIC. This mapping will accommodate the extension mechanisms defined in the HTTP/2 specification.</t>
-
-   <t>QUIC also dictates that packets should be sized to fit within the path's MTU to avoid IP fragmentation. However path MTU discovery is a work in
-   progress, and the current QUIC implementation uses a 1350-byte maximum QUIC packet size for IPv6, 1370 for IPv4.</t>
-
-</section>
-
-
-
 <section title="Profile of HTTP/2 for IoT"> 
   <t>HTTP/2 has many negotiable settings that can improve its performance for IoT applications by reducing bandwidth, codespace, and RAM requirements. Specifically, the following settings and values have been found to be useful in IoT applications:
     <list style='symbols'>
       <t> SETTINGS_ENABLE_PUSH: This setting allows to enable/disable server push. This functionality may not be required in some IoT applications </t>
       <t> SETTINGS_HEADER_TABLE_SIZE: this setting allows hosts to limit the size of the header compression table used for decoding, reducing required RAM, but potentially increasing bandwidth requirements </t>
       <t> SETTINGS_INITIAL_WINDOW_SIZE: this setting allows hosts to limit the flow control window, potentially reducing buffer requirements at the expense of potentially underutilized bandwidth-delay products </t>
-      <t> SETTINGS_MAX_CONCURRENT_STREAMS: this settings allows hosts to limit the number of simulataneous streams for a connection </t>
+      <t> SETTINGS_MAX_CONCURRENT_STREAMS: this settings allows hosts to limit the number of simultaneous streams for a connection </t>
       <t> SETTINGS_MAX_FRAME_SIZE: this setting allows hosts to specify the largest frame size they are willing to receive. Somewhat counterintuitively, IoT hosts may wish to leave this value large and rely on flow control to avoid unnecessary framing overhead. </t>
       <t> SETTINGS_MAX_HEADER_LIST_SIZE: this setting allows hosts to limit the maximum size of the header list they are willing to receive </t>
     </list>
@@ -427,21 +390,21 @@ requires optimizing aspects such as:
      available. However, usually an IoT deployment needs to communicate to another one, or at least needs to communicate with the Web, both because they have to upload
      data to the Cloud or because usually they are controlled by a Web application.</t>
 
-  <t>The need to communicate is facilitated by a Cross-protocol proxy or a gateway translating a protocol syntax and semantic into another one. However, the presence of 
+  <t>In such cases, communication is facilitated by a cross-protocol proxy or a gateway translating from one protocol syntax and semantic into another one. However, the presence of 
      Cross-Protocol or Application gateways has at least two main drawbacks that need to be analyzed and addressed carefully.
 
       <list style='symbols'>
-		<t> while the translation may be trivial for the basic scenarios, there are a lot of cases where the translation can lead to a lost of information
+		<t> while the translation may be trivial for the basic scenarios, there are a lot of cases where the translation can lead to information loss
                     or an incompatibility due to the different way different proxies make the translation.</t>
 
-		<t> The presence of a Cross-Protocol may also become a critical point for the security.</t>
+		<t> The presence of such devices may also become a critical point for security.</t>
 	</list>
      </t> 
 
 </section>
 
 <section title="Implementation Considerations"> 
-  <t> In addition to underlying stack considerations such as IPv4, IPv6, TCP, and TLS implementations, there are several implementation considerations for HTTP/2 for IoT. </t>
+  <t> In addition to underlying stack considerations with respect to IPv4, IPv6, TCP, and TLS, there are implementation considerations for HTTP/2 for IoT. </t>
   
   <t> A primary consideration is the number of allowed simultaneous HTTP/2 connections. As each connection has associated overhead, as well as overhead for each stream, constrained hosts may wish to limit their number of simultaneous connections. However, implementers should consider that some popular browsers require more than one connection to operate. </t>
 
@@ -588,6 +551,39 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
   </section>
 </section>
 
+<section title="HTTP/2 over UDP - QUIC"> 
+  <t>
+    QUIC (Quick UDP Internet Connections) is a new multiplexed transport protocol designed to run in user space above UDP, optimized for HTTP/2 semantics. The protocol
+    is still in its early days and the standardization work in IETF has just started.</t>
+
+  <t>QUIC provides functionality already present in TCP, TLS and HTTP/2
+
+  <list style='symbols'>
+		<t> connection semantics, reliability, and congestion control equivalent to TCP.</t>
+		<t> security equivalent to TLS </t>
+		<t> multiplexing and flow control equivalent to HTTP/2</t>
+	</list>
+
+   </t>
+
+   <t>Where functionality is similar to that of existing protocols, it has been re-designed to be more efficient.</t>
+
+   <t>To improve connection establishment latency QUIC combines the crypto and transport handshakes, reducing the
+   number of roundtrips required to set up a secure connection. QUIC connections are commonly 0-RTT, meaning that on most QUIC
+   connections, data can be sent immediately without waiting for a reply from the server, as compared to the 1-3 roundtrips required for
+   TCP+TLS before application data can be sent.</t>
+
+   <t>QUIC has been designed to provide richer information to congestion control algorithms than TCP, moreover the actual congestion control
+   is plugable in QUIC.</t> 
+
+   <t>Even if QUIC has been initially designed with HTTP/2 as the primary application protocol to support, it is meant to become a modern general-purpose transport
+    protocol. The IETF standardization effort will also focus on describing the mapping of HTTP/2 semantics using QUIC specifically with the goal of minimizing web 
+    latency using QUIC. This mapping will accommodate the extension mechanisms defined in the HTTP/2 specification.</t>
+
+   <t>QUIC also dictates that packets should be sized to fit within the path's MTU to avoid IP fragmentation. However path MTU discovery is work in
+   progress, and the current QUIC implementation uses a 1350-byte maximum QUIC packet size for IPv6, 1370 for IPv4.</t>
+
+</section>
 
     <section title="Acknowledgements">
       <t>
