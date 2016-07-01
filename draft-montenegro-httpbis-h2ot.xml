@@ -241,7 +241,7 @@ resource constrained devices and unreliable networks.
 
       <t>
       The protocol meets IoT requirements through the modification of some HTTP functionalities to achieve low-power consumption and operation over lossy links.
-      To aovid undesirable packet fragmentation the CoAP specification provides also an upper bound to the message size, dictating that a CoAP message,
+      To avoid undesirable packet fragmentation the CoAP specification provides also an upper bound to the message size, dictating that a CoAP message,
       appropriately encapsulated, SHOULD fit within a single IP datagram
 
       <list style='hanging'>
@@ -265,11 +265,12 @@ resource constrained devices and unreliable networks.
     
  <section title="Protocols Comparison"> 
 	<t>
-    The aformentioned protocols have been compared in both experimental and emulated environments. Previous reports show that performance is highly dependent 
-    on the network conditions <xref target="IEEE_survey"></xref>: in good link conditions with low packet loss, MQTT delivers packets with lower delay than CoAP; 
-     however, if packet loss is under 25% and messages are of a small size, CoAP demonstrates a better link usage than MQTT. CoAP has also been compared to HTTP/1.1. 
-     In terms of power consumption and response time, naturally CoAP behaves better than HTTP/1.1 thanks to the reduced packet sizes. No reports have been found 
-     comparing MQTT or CoAP to HTTP/2.
+    The aformentioned protocols have been compared in both experimental and emulated environments <xref target="IEEE_survey"></xref>. Previous reports show that performance is highly dependent on the network conditions: in good link conditions with low packet loss, MQTT delivers packets with lower delay than CoAP, but CoAP outperforms when high packet losses are present; in terms of packet sizes, if packet loss is under 25% and messages are of a small size, CoAP demonstrates a better link usage than MQTT. However, other experiments report a better performance of MQTT in hight traffic/high packet loss scenarios  <xref target="IoT_analysis"></xref>. CoAP has also been compared to HTTP/1.1. In terms of power consumption and response time, naturally CoAP behaves better than HTTP/1.1 thanks to the reduced packet sizes.</t>
+     
+     <t>Coexistence among the protocols has also been tested with varied network configurations. For the most part, interaction of CoAP with HTTP has been studied <xref target="Web_things"></xref>, demonstrating successfull exchange when there is a CoAP server running on a constrained node and the HTTP client is requesting resources from it, or when there is a CoAP client requesting resources from an HTTP server. In both cases a proxy is necessary to enable translation between the protocols. Another network configuration with a CoAP client - CoAP proxy - CoAP server has been compared to the CoAP client - CoAP/HTTP proxy - HTTP server configuration, in which case the response times of the only-CoAP configuration resulted to be lower even when the number of concurrent requests increases <xref target="CoAP_integration"></xref>. </t>
+     
+     <t>
+     No reports have been found comparing MQTT or CoAP to HTTP/2.
     </t>
  </section>
    
@@ -356,7 +357,7 @@ resource constrained devices and unreliable networks.
    is plugable in QUIC.</t> 
 
    <t>Even if QUIC has been initially designed with HTTP/2 as the primary application protocol to support, it is meant to become a modern general-purpose transport
-    protocol. The IETF standization effort will also focus on describing the mapping of HTTP/2 semantics using QUIC specifically with the goal of minimizing web 
+    protocol. The IETF standardization effort will also focus on describing the mapping of HTTP/2 semantics using QUIC specifically with the goal of minimizing web 
     latency using QUIC. This mapping will accommodate the extension mechanisms defined in the HTTP/2 specification.</t>
 
    <t>QUIC also dictates that packets should be sized to fit within the path's MTU to avoid IP fragmentation. However path MTU discovery is a work in
@@ -369,7 +370,7 @@ resource constrained devices and unreliable networks.
 <section title="Profile of HTTP/2 for IoT"> 
   <t>HTTP/2 has many negotiable settings that can improve its performance for IoT applications by reducing bandwidth, codespace, and RAM requirements. Specifically, the following settings and values have been found to be useful in IoT applications:
     <list style='symbols'>
-      <t> SETTINGS_ENABLE_PUSH: this functionality may not be required in some IoT applications </t>
+      <t> SETTINGS_ENABLE_PUSH: This setting allows to enable/disable server push. This functionality may not be required in some IoT applications </t>
       <t> SETTINGS_HEADER_TABLE_SIZE: this setting allows hosts to limit the size of the header compression table used for decoding, reducing required RAM, but potentially increasing bandwidth requirements </t>
       <t> SETTINGS_INITIAL_WINDOW_SIZE: this setting allows hosts to limit the flow control window, potentially reducing buffer requirements at the expense of potentially underutilized bandwidth-delay products </t>
       <t> SETTINGS_MAX_CONCURRENT_STREAMS: this settings allows hosts to limit the number of simulataneous streams for a connection </t>
@@ -387,16 +388,16 @@ resource constrained devices and unreliable networks.
 
 <section title="Gateway and Proxying Issues"> 
 
-  <t>The proliferation of application and security protocols in the IoT has produced the deployments of island of IoT device each using one of the several protocols
-     available. However those usually an IoT deployment need to communicate to another one, or at least need to communicate with the Web both because they have to upload
+  <t>The proliferation of application and security protocols in the IoT has produced the deployments of islands of IoT devices, each using one of the several protocols
+     available. However, usually an IoT deployment needs to communicate to another one, or at least needs to communicate with the Web, both because they have to upload
      data to the Cloud or because usually they are controlled by a Web application.</t>
 
-  <t>The need to communicate is facilitated by Cross-protocol proxy or gateway translating a protocol syntax and semantic in another one. However the presence of 
-     Cross-Protocol or Application gateways has at least to main drawbacks that need to be analyzed and addressed carefully.
+  <t>The need to communicate is facilitated by a Cross-protocol proxy or a gateway translating a protocol syntax and semantic into another one. However, the presence of 
+     Cross-Protocol or Application gateways has at least two main drawbacks that need to be analyzed and addressed carefully.
 
       <list style='symbols'>
-		<t> while the translation maybe trivial for the basic scenarios, there are a lot of cases where the translation can lead to a lost of information
-                    or an incompatibility due to the different way differnt proxies make the translation.</t>
+		<t> while the translation may be trivial for the basic scenarios, there are a lot of cases where the translation can lead to a lost of information
+                    or an incompatibility due to the different way different proxies make the translation.</t>
 
 		<t> The presence of a Cross-Protocol may also become a critical point for the security.</t>
 	</list>
@@ -594,14 +595,69 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
        <reference anchor="IEEE_survey">
         <front>
           <title>Internet of Things: A Survey on Enabling Technologies, Protocols, and Applications</title>
-          <author initials="A." surname="Al-Fuqaha et al." fullname="A. Al-Fuqaha et al.">         
-			<organization/>
-			<address/>
+          <author initials="A." surname="Al-Fuqaha" fullname="A. Al-Fuqaha, et al.">         
+		  </author>	
+		  <author initials="M." surname="Guizani" fullname="">         
+		  </author>	
+		   <author initials="M." surname="Mohammadi" fullname="">         
+		  </author>		
+		   <author initials="M." surname="Aledhari" fullname="">         
+		  </author>		
+		   <author initials="M." surname="Ayyash" fullname="">         
 		  </author>		
           <date month="November" year="2015" />
         </front>
-        <seriesInfo name="" value="" />
+        <seriesInfo name="IEEE Communication Surveys and Tutorials" value="" />
         </reference>
+        
+        <reference anchor="Web_things">
+        <front>
+          <title>Connecting the web with the web of things: lessons learned from implementing a CoAP-HTTP proxy</title>
+          <author initials="C." surname="Lerche" fullname="">         
+		  </author>		
+		  <author initials="N." surname="Laum" fullname="">         
+		  </author>		
+		  <author initials="F." surname="Golatowski" fullname="">         
+		  </author>		
+		  <author initials="D." surname="Timmermann" fullname="">         
+		  </author>		
+		  <author initials="C." surname="Niedermier" fullname="">         
+		  </author>		
+          <date month="" year="2012" />
+        </front>
+        <seriesInfo name="Proc. IEEE MASS" value="" />
+        </reference> 
+        
+        <reference anchor="IoT_analysis">
+        <front>
+          <title>Internet of Things application layer protocol analysis over error and delay prone links</title>
+          <author initials="M." surname="Colina" fullname="M. Colina"> 		
+		  </author>		
+		  <author initials="M." surname="Bartolucci" fullname=""> 		
+		  </author>		
+		   <author initials="A." surname="Vanelli-Coralli" fullname=""> 		
+		  </author>	
+		   <author initials="G." surname="Corazza" fullname=""> 		
+		  </author>	
+          <date month="" year="2014" />
+        </front>
+        <seriesInfo name="Proc. ASMS/SPSC Conference" value="" />
+        </reference> 
+        
+        <reference anchor="CoAP_integration">
+        <front>
+          <title>SCoAP: An integration of CoAP protocol with web-based application</title>
+          <author initials="N.K." surname="Giang" fullname="">         
+		  </author>		
+		   <author initials="M." surname="Ha" fullname="">         
+		  </author>		
+		   <author initials="D." surname="Kim" fullname="">         
+		  </author>		
+          <date month="" year="2013" />
+        </front>
+        <seriesInfo name="Proc. IEEE GLOBECOM" value="" />
+        </reference> 
+       
         
       <reference anchor="Going_Dark" target="https://cyber.law.harvard.edu/pubrelease/dont-panic/Dont_Panic_Making_Progress_on_Going_Dark_Debate.pdf">
         <front>
