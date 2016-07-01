@@ -4,12 +4,12 @@
 Network Working Group                                      G. Montenegro
 Internet-Draft                                                 Microsoft
 Intended status: Informational                               S. Cespedes
-Expires: January 1, 2017                            Universidad de Chile
+Expires: January 2, 2017                            Universidad de Chile
                                                                S. Loreto
                                                                 Ericsson
                                                               R. Simpson
                                                         General Electric
-                                                           June 30, 2016
+                                                               July 2016
 
 
                    HTTP/2 for the Internet of Things
@@ -34,7 +34,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on January 1, 2017.
+   This Internet-Draft will expire on January 2, 2017.
 
 Copyright Notice
 
@@ -52,9 +52,9 @@ Copyright Notice
 
 
 
-Montenegro, et al.       Expires January 1, 2017                [Page 1]
+Montenegro, et al.       Expires January 2, 2017                [Page 1]
 
-Internet-Draft               HTTP/2 for IoT                    June 2016
+Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
    the Trust Legal Provisions and are provided without warranty as
@@ -62,7 +62,7 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
 
 Table of Contents
 
-   1.  Introduction (gab)  . . . . . . . . . . . . . . . . . . . . .   2
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Application Transport Alternatives and their Strengths  . . .   4
      2.1.  HTTP/1.1  . . . . . . . . . . . . . . . . . . . . . . . .   4
      2.2.  MQTT  . . . . . . . . . . . . . . . . . . . . . . . . . .   5
@@ -72,7 +72,7 @@ Table of Contents
    4.  HTTP/2 in IoT . . . . . . . . . . . . . . . . . . . . . . . .   8
    5.  HTTP/2 over UDP - QUIC  . . . . . . . . . . . . . . . . . . .   8
    6.  Profile of HTTP/2 for IoT . . . . . . . . . . . . . . . . . .   9
-   7.  Negotiation of HTTP/2 for IoT (gab) . . . . . . . . . . . . .  10
+   7.  Negotiation of HTTP/2 for IoT . . . . . . . . . . . . . . . .  10
    8.  Gateway and Proxying Issues . . . . . . . . . . . . . . . . .  10
    9.  Implementation Considerations . . . . . . . . . . . . . . . .  10
    10. Experimentation and Performance . . . . . . . . . . . . . . .  11
@@ -86,7 +86,7 @@ Table of Contents
      12.2.  Informative References . . . . . . . . . . . . . . . . .  14
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
 
-1.  Introduction (gab)
+1.  Introduction
 
    When the IETF started work on IoT with the 6lowpan WG, it was clear
    that in addition to the lower-layer adaptation work for IPv6, much
@@ -94,11 +94,11 @@ Table of Contents
    "things" in "IoT" are nodes that are constrained in some manner--
    e.g., cpu, memory, power--such that direct use of unmodified
    mainstream protocols is challenging.)  Once the IPv6 adaptation was
-   understood, the next questions were what protocols to use above IP
-   for different functions and at different layers.  That question may
-   not have a single answer that is always best for all scenarios and
-   use cases.  There are many such use cases, in accordance with the
-   fact that "IoT" means too many things.
+   understood, the next question was what protocols to use above IP for
+   different functions and at different layers.  That question may not
+   have a single answer that is always best for all scenarios and use
+   cases.  There are many such use cases, in accordance with the fact
+   that "IoT" means too many things.
 
    Accordingly, the IoT landscape includes a proliferation of options
    for any particular functionality (transport, encoding, security
@@ -108,38 +108,39 @@ Table of Contents
 
 
 
-Montenegro, et al.       Expires January 1, 2017                [Page 2]
+Montenegro, et al.       Expires January 2, 2017                [Page 2]
 
-Internet-Draft               HTTP/2 for IoT                    June 2016
+Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
-   components have the same name or come from the same original
-   standard, each organization adapts it ever so slightly to their own
-   goals rendering the resultant components non-interoperable.  Many of
-   these components are being created expressly for IoT (within the IETF
-   and elsewhere) with the justification that the mainstream options
-   could not possibly be usable for IoT scenarios, which results in
-   multiple disparate networking and software stacks.  Given the
-   incipient state of IoT, for the foreseeable future multiple competing
-   stacks will continue to exist at least in gateways and cloud
-   elements.  This adds complexity to IoT, hence, amplifying the attack
-   surface.  Nevertheless, properly configured and implemented,
-   mainstream options may not just be workable, but may even be the best
-   option.
+   components have the same name or originate in the same original
+   standard (or even code base), each organization adapts it ever so
+   slightly to their own goals rendering the resultant components non-
+   interoperable.  Many of these components are being created expressly
+   for IoT (within the IETF and elsewhere) with the justification that
+   the mainstream options could not possibly be usable for IoT
+   scenarios, which results in multiple disparate networking and
+   software stacks.  Given the incipient state of IoT, for the
+   foreseeable future multiple competing stacks will continue to exist
+   at least in gateways and cloud elements.  This adds complexity to
+   IoT, hence, amplifying the attack surface.  Nevertheless, properly
+   configured and implemented, mainstream options may not just be
+   workable, but may even be the best option.
 
-   The appearance of a one-off stack (as opposed to a properly
-   configured and adapted mainstream stack) is reminiscent of WAP 1.x, a
-   complete vertical stack offered for phones as they were starting to
-   get on the internet in the late 90's.  At that time the IETF and the
-   W3C started efforts to develop the mainstream alternatives and today
-   no phone uses WAP.  Phone stacks are mainstream TCP/IP protocols
-   (properly configured and adapted, of course).  Today, we don't just
-   see one non-mainstream stack in IoT, but several.  It's as if we had
-   WAP1, WAP2, WAP3, etc.  And we may have to live with them for some
-   time, but it is essential to ponder what the mainstream stack might
-   look like if we are to eventually reap the benefits of a true
-   Internet of Things instead of a not-quite-but-kinda-close-to-
-   Internet-non-interoperable-hodge-podge-of-Things.
+   The appearance of one-off stacks (as opposed to a properly configured
+   and adapted mainstream stack) is reminiscent of WAP 1.x, a complete
+   vertical stack offered for phones as they were starting to access the
+   Internet (albeit from within a walled garden) in the late 90's.  At
+   that time the IETF and the W3C started efforts to develop the
+   mainstream alternatives.  As a result, today no phone uses WAP.
+   Phone stacks are mainstream TCP/IP protocols (properly configured and
+   adapted, of course).  In contrast, today in IoT we don't just see one
+   non-mainstream stack in IoT, but several (as if we had WAP1, WAP2,
+   WAP3, etc.).  And we may have to live with them for some time, but it
+   is essential to ponder what the mainstream stack might look like if
+   we are to eventually reap the benefits of a true Internet of Things
+   instead of a not-quite-but-kinda-close-to-Internet-non-interoperable-
+   hodge-podge-of-Things.
 
    HTTP/2 is now widely available as a transport option.  Moreover, the
    ongoing effort to layer HTTP/2 over UDP (i.e., over QUIC) adds a
@@ -158,16 +159,19 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
       network (a normal network using mainstream stack implementations,
       typically connected to the Internet).
 
+
+
+
+
+
+Montenegro, et al.       Expires January 2, 2017                [Page 3]
+
+Internet-Draft               HTTP/2 for IoT                    July 2016
+
+
    gateway to cloud:  A gateway node (see above) engages in
       communication with unconstrained networks, typically a cloud
       service on the Internet.
-
-
-
-Montenegro, et al.       Expires January 1, 2017                [Page 3]
-
-Internet-Draft               HTTP/2 for IoT                    June 2016
-
 
    node to cloud:  A node on a constrained network engages in direct
       communcation with unconstrained networks, typically a cloud
@@ -213,18 +217,18 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
    the basis not just for the web, but for much non-web traffic in the
    internet today.  Most (but not all) of the instances of HTTP today
    version 1.1 as specified in RFC2616.  Since its publication back in
+
+
+
+Montenegro, et al.       Expires January 2, 2017                [Page 4]
+
+Internet-Draft               HTTP/2 for IoT                    July 2016
+
+
    1999 it has evolved organically, producing countless variations and
    exceptions to its rules.  Modern browser and server implementations
    have very complex and convoluted code to deal with parsing and
    handling the many nuances of the protocol.  Because of all this
-
-
-
-Montenegro, et al.       Expires January 1, 2017                [Page 4]
-
-Internet-Draft               HTTP/2 for IoT                    June 2016
-
-
    confusion, the HTTPbis working group set out to clarify the existing
    specifications, and after a multi-year effort to clarify its many
    sources of confusion, it has published a cleaner specification in
@@ -272,13 +276,9 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
 
 
 
-
-
-
-
-Montenegro, et al.       Expires January 1, 2017                [Page 5]
+Montenegro, et al.       Expires January 2, 2017                [Page 5]
 
-Internet-Draft               HTTP/2 for IoT                    June 2016
+Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
 2.3.  CoAP
@@ -332,9 +332,9 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
 
 
 
-Montenegro, et al.       Expires January 1, 2017                [Page 6]
+Montenegro, et al.       Expires January 2, 2017                [Page 6]
 
-Internet-Draft               HTTP/2 for IoT                    June 2016
+Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
    than HTTP/1.1 thanks to the reduced packet sizes.  No reports have
@@ -388,9 +388,9 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
 
 
 
-Montenegro, et al.       Expires January 1, 2017                [Page 7]
+Montenegro, et al.       Expires January 2, 2017                [Page 7]
 
-Internet-Draft               HTTP/2 for IoT                    June 2016
+Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
    Furthermore, multiple stacks defeat the purpose of the "I" in IoT:
@@ -444,9 +444,9 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
 
 
 
-Montenegro, et al.       Expires January 1, 2017                [Page 8]
+Montenegro, et al.       Expires January 2, 2017                [Page 8]
 
-Internet-Draft               HTTP/2 for IoT                    June 2016
+Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
    To improve the Connection Establishement latency QUIC combines the
@@ -500,9 +500,9 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
 
 
 
-Montenegro, et al.       Expires January 1, 2017                [Page 9]
+Montenegro, et al.       Expires January 2, 2017                [Page 9]
 
-Internet-Draft               HTTP/2 for IoT                    June 2016
+Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
    o  SETTINGS_MAX_FRAME_SIZE: this setting allows hosts to specify the
@@ -513,7 +513,7 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
    o  SETTINGS_MAX_HEADER_LIST_SIZE: this setting allows hosts to limit
       the maximum size of the header list they are willing to receive
 
-7.  Negotiation of HTTP/2 for IoT (gab)
+7.  Negotiation of HTTP/2 for IoT
 
    TODO
 
@@ -556,9 +556,9 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
 
 
 
-Montenegro, et al.       Expires January 1, 2017               [Page 10]
+Montenegro, et al.       Expires January 2, 2017               [Page 10]
 
-Internet-Draft               HTTP/2 for IoT                    June 2016
+Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
    In addition to minimizing the number of simultaneous connections,
@@ -612,9 +612,9 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
 
 
 
-Montenegro, et al.       Expires January 1, 2017               [Page 11]
+Montenegro, et al.       Expires January 2, 2017               [Page 11]
 
-Internet-Draft               HTTP/2 for IoT                    June 2016
+Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
    4745 5420 2f6f 6e6f 6666 2048 5454 502f 312e 310d
@@ -668,9 +668,9 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
 
 
 
-Montenegro, et al.       Expires January 1, 2017               [Page 12]
+Montenegro, et al.       Expires January 2, 2017               [Page 12]
 
-Internet-Draft               HTTP/2 for IoT                    June 2016
+Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
    2.  Server sends (54 octets):
@@ -724,9 +724,9 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
 
 
 
-Montenegro, et al.       Expires January 1, 2017               [Page 13]
+Montenegro, et al.       Expires January 2, 2017               [Page 13]
 
-Internet-Draft               HTTP/2 for IoT                    June 2016
+Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
 12.1.  Normative References
@@ -780,9 +780,9 @@ Internet-Draft               HTTP/2 for IoT                    June 2016
 
 
 
-Montenegro, et al.       Expires January 1, 2017               [Page 14]
+Montenegro, et al.       Expires January 2, 2017               [Page 14]
 
-Internet-Draft               HTTP/2 for IoT                    June 2016
+Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
    [Clapper]  "US intelligence chief: we might use the internet of
@@ -836,4 +836,4 @@ Authors' Addresses
 
 
 
-Montenegro, et al.       Expires January 1, 2017               [Page 15]
+Montenegro, et al.       Expires January 2, 2017               [Page 15]

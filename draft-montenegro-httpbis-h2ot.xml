@@ -54,7 +54,7 @@
         </address>
     </author>
     
-    <date month="June" year="2016" />
+    <date month="July" year="2016" />
     <area>Applications</area>
     <keyword>HTTP, IoT</keyword>
     <abstract>
@@ -66,13 +66,13 @@ This document makes the case for HTTP/2 for IoT.
   </front>
 
   <middle>
-    <section anchor="intro" title="Introduction (gab)">
+    <section anchor="intro" title="Introduction">
 	<t>
     When the IETF started work on IoT with the 6lowpan WG, it was clear that in addition to the lower-layer adaptation work 
     for IPv6, much work elsewhere in the stack was necessary. (In this
     document, the "things" in "IoT" are nodes that are constrained in some manner--e.g., cpu, memory, power--such that direct 
-    use of unmodified mainstream protocols is challenging.) Once the IPv6 adaptation was understood, the next questions 
-    were what protocols to use above IP for different functions and at different layers. 
+    use of unmodified mainstream protocols is challenging.) Once the IPv6 adaptation was understood, the next question 
+    was what protocols to use above IP for different functions and at different layers. 
     That question may not have a single answer that is always best for all scenarios and use
     cases. There are many such use cases, in accordance with the fact that "IoT" means too many things.     
 </t>
@@ -81,7 +81,7 @@ This document makes the case for HTTP/2 for IoT.
     Accordingly, the IoT landscape includes a proliferation of options for any particular functionality 
     (transport, encoding, security suites, authentication/authorization, etc). Different vendors and standards
     organizations (or fora) offer IoT solutions by grouping these different components into separate stacks.
-    Even if the components have the same name or come from the same original standard, each organization adapts it 
+    Even if the components have the same name or originate in the same original standard (or even code base), each organization adapts it 
     ever so slightly to their own goals rendering the resultant components non-interoperable. 
     Many of these components are being created expressly for IoT (within the IETF and elsewhere) with the 
     justification that the mainstream options could not possibly be usable for IoT scenarios, 
@@ -94,11 +94,13 @@ This document makes the case for HTTP/2 for IoT.
 </t>
 
 <t> 
-    The appearance of a one-off stack (as opposed to a properly configured and adapted mainstream stack) is reminiscent of 
-    WAP 1.x, a complete vertical stack offered for phones as they were starting to get on the internet in the late 90's. At 
-    that time the IETF and the W3C started efforts to develop the mainstream alternatives and today no phone uses WAP. Phone 
-    stacks are mainstream TCP/IP protocols (properly configured and adapted, of course). Today, we don't just see one non-mainstream
-    stack in IoT, but several. It's as if we had WAP1, WAP2, WAP3, etc. And we may have to live with them for some time,
+    The appearance of one-off stacks (as opposed to a properly configured and adapted mainstream stack) is reminiscent of 
+    WAP 1.x, a complete vertical stack offered for phones as they were starting to access the Internet (albeit from within 
+    a walled garden) in the late 90's. At 
+    that time the IETF and the W3C started efforts to develop the mainstream alternatives. As a result, today no phone uses WAP. Phone 
+    stacks are mainstream TCP/IP protocols (properly configured and adapted, of course). In contrast, today in IoT 
+    we don't just see one non-mainstream
+    stack in IoT, but several (as if we had WAP1, WAP2, WAP3, etc.). And we may have to live with them for some time,
     but it is essential to ponder what the mainstream stack might look like if we are to eventually reap the benefits of 
     a true Internet of Things instead of a not-quite-but-kinda-close-to-Internet-non-interoperable-hodge-podge-of-Things.
 </t>
@@ -377,7 +379,7 @@ resource constrained devices and unreliable networks.
   </t>
 </section>
 
-<section title="Negotiation of HTTP/2 for IoT (gab)"> 
+<section title="Negotiation of HTTP/2 for IoT"> 
   <t>
     TODO
   </t>
