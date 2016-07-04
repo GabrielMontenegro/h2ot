@@ -583,6 +583,15 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
    <t>QUIC also dictates that packets should be sized to fit within the path's MTU to avoid IP fragmentation. However path MTU discovery is work in
    progress, and the current QUIC implementation uses a 1350-byte maximum QUIC packet size for IPv6, 1370 for IPv4.</t>
 
+<t>
+  QUIC will improve the HTTP/2 match for IoT described in the previous section as With QUIC:
+    <list style='symbols'>
+		<t>packets are always authenticated and typically the payload is fully encrypted</t>
+		<t>connections are commonly 0-RTT</t>
+                <t>the native multistream provides multiplexing without head-of-line blocking</t>
+  	</list>
+</t>
+
 </section>
 
     <section title="Acknowledgements">

@@ -5,12 +5,12 @@
 Network Working Group                                      G. Montenegro
 Internet-Draft                                                 Microsoft
 Intended status: Informational                               S. Cespedes
-Expires: January 2, 2017                            Universidad de Chile
+Expires: January 5, 2017                            Universidad de Chile
                                                                S. Loreto
                                                                 Ericsson
                                                               R. Simpson
                                                         General Electric
-                                                            July 1, 2016
+                                                            July 4, 2016
 
 
                    HTTP/2 for the Internet of Things
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on January 2, 2017.
+   This Internet-Draft will expire on January 5, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Montenegro, et al.       Expires January 2, 2017                [Page 1]
+Montenegro, et al.       Expires January 5, 2017                [Page 1]
 
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
@@ -84,8 +84,8 @@ Table of Contents
    11. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  15
    12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
      12.1.  Normative References . . . . . . . . . . . . . . . . . .  15
-     12.2.  Informative References . . . . . . . . . . . . . . . . .  15
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  16
+     12.2.  Informative References . . . . . . . . . . . . . . . . .  16
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  17
 
 1.  Introduction
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Montenegro, et al.       Expires January 2, 2017                [Page 2]
+Montenegro, et al.       Expires January 5, 2017                [Page 2]
 
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
@@ -165,7 +165,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
 
-Montenegro, et al.       Expires January 2, 2017                [Page 3]
+Montenegro, et al.       Expires January 5, 2017                [Page 3]
 
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
@@ -221,7 +221,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
 
-Montenegro, et al.       Expires January 2, 2017                [Page 4]
+Montenegro, et al.       Expires January 5, 2017                [Page 4]
 
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
@@ -277,7 +277,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
 
-Montenegro, et al.       Expires January 2, 2017                [Page 5]
+Montenegro, et al.       Expires January 5, 2017                [Page 5]
 
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
@@ -333,7 +333,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
 
-Montenegro, et al.       Expires January 2, 2017                [Page 6]
+Montenegro, et al.       Expires January 5, 2017                [Page 6]
 
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
@@ -389,7 +389,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
 
-Montenegro, et al.       Expires January 2, 2017                [Page 7]
+Montenegro, et al.       Expires January 5, 2017                [Page 7]
 
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
@@ -445,7 +445,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
 
-Montenegro, et al.       Expires January 2, 2017                [Page 8]
+Montenegro, et al.       Expires January 5, 2017                [Page 8]
 
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
@@ -501,7 +501,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
 
-Montenegro, et al.       Expires January 2, 2017                [Page 9]
+Montenegro, et al.       Expires January 5, 2017                [Page 9]
 
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
@@ -557,7 +557,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
 
-Montenegro, et al.       Expires January 2, 2017               [Page 10]
+Montenegro, et al.       Expires January 5, 2017               [Page 10]
 
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
@@ -613,7 +613,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
 
-Montenegro, et al.       Expires January 2, 2017               [Page 11]
+Montenegro, et al.       Expires January 5, 2017               [Page 11]
 
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
@@ -669,7 +669,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
 
-Montenegro, et al.       Expires January 2, 2017               [Page 12]
+Montenegro, et al.       Expires January 5, 2017               [Page 12]
 
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
@@ -725,7 +725,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
 
-Montenegro, et al.       Expires January 2, 2017               [Page 13]
+Montenegro, et al.       Expires January 5, 2017               [Page 13]
 
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
@@ -781,7 +781,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
 
-Montenegro, et al.       Expires January 2, 2017               [Page 14]
+Montenegro, et al.       Expires January 5, 2017               [Page 14]
 
 Internet-Draft               HTTP/2 for IoT                    July 2016
 
@@ -796,6 +796,17 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
    path's MTU to avoid IP fragmentation.  However path MTU discovery is
    work in progress, and the current QUIC implementation uses a
    1350-byte maximum QUIC packet size for IPv6, 1370 for IPv4.
+
+   QUIC will improve the HTTP/2 match for IoT described in the previous
+   section as With QUIC:
+
+   o  packets are always authenticated and typically the payload is
+      fully encrypted
+
+   o  connections are commonly 0-RTT
+
+   o  the native multistream provides multiplexing without head-of-line
+      blocking
 
 11.  Acknowledgements
 
@@ -821,6 +832,16 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
               RFC 7230, DOI 10.17487/RFC7230, June 2014,
               <http://www.rfc-editor.org/info/rfc7230>.
 
+
+
+
+
+
+Montenegro, et al.       Expires January 5, 2017               [Page 15]
+
+Internet-Draft               HTTP/2 for IoT                    July 2016
+
+
    [RFC7231]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
               Protocol (HTTP/1.1): Semantics and Content", RFC 7231,
               DOI 10.17487/RFC7231, June 2014,
@@ -831,16 +852,6 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
    [RFC2629]  Rose, M., "Writing I-Ds and RFCs using XML", RFC 2629,
               DOI 10.17487/RFC2629, June 1999,
               <http://www.rfc-editor.org/info/rfc2629>.
-
-
-
-
-
-
-Montenegro, et al.       Expires January 2, 2017               [Page 15]
-
-Internet-Draft               HTTP/2 for IoT                    July 2016
-
 
    [Deuterium]
               Simpson, R., "Deuterium HTTP/2 Library", June 2016,
@@ -878,6 +889,15 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
               dont-panic/
               Dont_Panic_Making_Progress_on_Going_Dark_Debate.pdf>.
 
+
+
+
+
+Montenegro, et al.       Expires January 5, 2017               [Page 16]
+
+Internet-Draft               HTTP/2 for IoT                    July 2016
+
+
    [Clapper]  "US intelligence chief: we might use the internet of
               things to spy on you", February 2016,
               <http://www.theguardian.com/technology/2016/feb/09/
@@ -890,12 +910,6 @@ Authors' Addresses
    Microsoft
 
    Email: Gabriel.Montenegro@microsoft.com
-
-
-
-Montenegro, et al.       Expires January 2, 2017               [Page 16]
-
-Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
    Sandra Cespedes
@@ -935,18 +949,4 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Montenegro, et al.       Expires January 2, 2017               [Page 17]
+Montenegro, et al.       Expires January 5, 2017               [Page 17]
