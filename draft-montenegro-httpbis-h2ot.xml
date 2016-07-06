@@ -68,39 +68,39 @@ This document makes the case for HTTP/2 for IoT.
   <middle>
     <section anchor="intro" title="Introduction">
 	<t>
-    When the IETF started work on IoT with the 6lowpan WG, it was clear that in addition to the lower-layer adaptation work 
+    When the IETF started work on the Internet-of-Things ("IoT") with the 6lowpan WG, it was clear that in addition to the lower-layer adaptation work 
     for IPv6, much work elsewhere in the stack was necessary. (In this
     document, the "things" in "IoT" are nodes that are constrained in some manner--e.g., cpu, memory, power--such that direct 
     use of unmodified mainstream protocols is challenging.) Once the IPv6 adaptation was understood, the next question 
-    was what protocols to use above IP for different functions and at different layers. 
+    was what protocols to use above IP(v6) for different functions and at different layers to have a complete stack. 
     That question may not have a single answer that is always best for all scenarios and use
-    cases. There are many such use cases, in accordance with the fact that "IoT" means too many things.     
+    cases. There are many such use cases, in accordance with the fact that IoT means too many things.     
 </t>
 
 <t> 
     Accordingly, the IoT landscape includes a proliferation of options for any particular functionality 
     (transport, encoding, security suites, authentication/authorization, etc). Different vendors and standards
     organizations (or fora) offer IoT solutions by grouping these different components into separate stacks.
-    Even if the components have the same name or originate in the same original standard (or even code base), each organization adapts it 
-    ever so slightly to their own goals rendering the resultant components non-interoperable. 
-    Many of these components are being created expressly for IoT (within the IETF and elsewhere) with the 
-    justification that the mainstream options could not possibly be usable for IoT scenarios, 
-    which results in multiple disparate networking and software stacks. Given the incipient state of IoT,
+    Even if the components have the same name or originate in the same original standard (or even in the same code base), 
+    each organization adapts it 
+    ever so slightly to their own goals, often rendering the resultant components non-interoperable. 
+    Many of these components are being created expressly for IoT (within the IETF and elsewhere) under the 
+    assumption that the mainstream options could not possibly be usable for IoT scenarios. 
+    This results in multiple disparate networking and software stacks. Given the incipient state of IoT,
     for the foreseeable future multiple competing stacks will continue to exist at least in gateways and 
     cloud elements.
-    This adds complexity to IoT,
-    hence, amplifying the attack surface. Nevertheless, properly configured and implemented, 
-    mainstream options may not just be workable, but may even be the best option. 
+    The additional complexity to IoT amplifies the attack surface. Nevertheless, properly configured and implemented, 
+    mainstream options may not just be workable, but may even be the best option at least in some scenarios. 
 </t>
 
 <t> 
     The appearance of one-off stacks (as opposed to a properly configured and adapted mainstream stack) is reminiscent of 
     WAP 1.x, a complete vertical stack offered for phones as they were starting to access the Internet (albeit from within 
     a walled garden) in the late 90's. At 
-    that time the IETF and the W3C started efforts to develop the mainstream alternatives. As a result, today no phone uses WAP. Phone 
-    stacks are mainstream TCP/IP protocols (properly configured and adapted, of course). In contrast, today in IoT 
-    we don't just see one non-mainstream
-    stack in IoT, but several (as if we had WAP1, WAP2, WAP3, etc.). And we may have to live with them for some time,
+    that time the IETF and the W3C started efforts to develop the mainstream alternatives. As a result, today no phone uses WAP. 
+    Instead, phone stacks are mainstream TCP/IP protocols (properly configured and adapted, of course). In contrast, today in IoT 
+    we see not just one non-mainstream
+    stack, but several (as if we had not just WAP, but WAP1, WAP2, WAP3, etc.). And we may have to live with them for some time,
     but it is essential to ponder what the mainstream stack might look like if we are to eventually reap the benefits of 
     a true Internet of Things instead of a not-quite-but-kinda-close-to-Internet-non-interoperable-hodge-podge-of-Things.
 </t>
@@ -150,8 +150,8 @@ This document makes the case for HTTP/2 for IoT.
 	</t>
   
 	<t>
-    This document makes the case for HTTP/2 as the most general protocol of choice for Internet of Things applications,
-    suitable for both Constrained network scenarios and Internet scenarios.
+    This document makes the case for HTTP/2 as the most general protocol of choice for Internet of Things applications.
+    HTTP/2 is most at home in Internet scenarios and is also suitable for at least some Constrained network scenarios.
 	</t>
 	</section>
 
@@ -183,7 +183,8 @@ This document makes the case for HTTP/2 for IoT.
 	</t>
   
   <t>
-    IT is interesting to note that in the same survey done in 2015, HTTP/2 was not even present, whereas it is now at 19%. No doubt
+    IT is interesting to note that in the same survey done in 2015, HTTP/2 was not even present, whereas it is now at 19% (the other protocols
+    are mostly unchanged). No doubt
     it is being used in scenarios where there are no major constraints (precisely where HTTP/1.x is also being used). Optimizing it for IoT
     can further promote its use. The sections below provide some more details on top-of-the-list protocols other than HTTP/2.
   </t>   
@@ -243,7 +244,7 @@ resource constrained devices and unreliable networks.
 
       <t>
       The protocol meets IoT requirements through the modification of some HTTP functionalities to achieve low-power consumption and operation over lossy links.
-      To avoid undesirable packet fragmentation the CoAP specification provides also an upper bound to the message size, dictating that a CoAP message,
+      To avoid undesirable packet fragmentation the CoAP specification provides an upper bound to the message size, dictating that a CoAP message,
       appropriately encapsulated, SHOULD fit within a single IP datagram
 
       <list style='hanging'>
@@ -255,12 +256,14 @@ resource constrained devices and unreliable networks.
    
 
  
-      In addition, CoAP may interact easily with HTTP through a proxy thanks to the common REST architecture. CoAP works on port 5683 and offers optional reliable 
-      delivery (thru a retransmission mechanism), support for unicast and multicast (which satisfies group communication for IoT), and asynchronous message exchange 
-      using simple and low complexity headers (a typical CoAP message can be between 10 and 20 bytes). 
+      CoAP interaction with HTTP must traverse a proxy, but at least the common REST architecture makes it easier. 
+      CoAP works on port 5683 and offers optional reliable 
+      delivery (thru a retransmission mechanism), support for unicast and multicast (which attempts to address group communication for IoT, but also 
+      introduces complexity for security, IPv6 scoping, wireless reliability, etc), and asynchronous message exchange 
+      A typical CoAP message can be between 10 and 20 bytes. 
       </t>
       <t>
-      It is the third most popular protocol in the survey with a 21% preference. Nevertheless, since CoAP is UDP-based, it also suffers from firewall traversal issues, verbosity (as compared to TCP) to maintain state in NAT boxes and lack of integration with existing enterprise infrastructures. There is ongoing work to specify the use of CoAP over TCP as well as CoAP over TLS, in an attempt to overcome issues with middleboxes and achieve a better integration with web environments.
+      It is the third most popular protocol in the survey with a 21% preference. Nevertheless, since CoAP is UDP-based, it also suffers from firewall traversal issues, verbosity (as compared to TCP) to maintain state in NAT boxes and lack of integration with existing enterprise infrastructures. There is ongoing work to specify the use of CoAP over TCP as well as CoAP over TLS, in an attempt to overcome issues with middleboxes and improve its applicability to Internet scenarios.
 		</t>
 
     </section>
@@ -272,7 +275,7 @@ resource constrained devices and unreliable networks.
      <t>Coexistence among the protocols has also been tested with varied network configurations. For the most part, interaction of CoAP with HTTP has been studied <xref target="Web_things"></xref>, demonstrating successful exchange when there is a CoAP server running on a constrained node and the HTTP client is requesting resources from it, or when there is a CoAP client requesting resources from an HTTP server. In both cases a proxy is necessary to enable translation between the protocols. Another network configuration with a CoAP client - CoAP proxy - CoAP server has been compared to the CoAP client - CoAP/HTTP proxy - HTTP server configuration, in which case the response times of the only-CoAP configuration resulted to be lower even when the number of concurrent requests increases <xref target="CoAP_integration"></xref>. </t>
      
      <t>
-     No reports have been found comparing MQTT or CoAP to HTTP/2.
+     To date, no reports have been found comparing MQTT or CoAP to HTTP/2.
     </t>
  </section>
    
@@ -614,7 +617,8 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
         </front>
       </reference>
       
-      <reference anchor="Eclipse_survey">
+      <reference anchor="Eclipse_survey"
+        target="http://iot.ieee.org/images/files/pdf/iot-developer-survey-2016-report-final.pdf">
         <front>
           <title>IoT Developer Survey</title>
           <author>         
@@ -623,8 +627,8 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
 		  </author>		
           <date month="April" year="2016" />
         </front>
-        </reference>
-        
+        </reference>      
+
        <reference anchor="IEEE_survey">
         <front>
           <title>Internet of Things: A Survey on Enabling Technologies, Protocols, and Applications</title>
