@@ -14,6 +14,8 @@
   <!ENTITY RFC5246 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml'>
   <!ENTITY RFC6454 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.6454.xml'>
   <!ENTITY RFC6455 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.6455.xml'>
+  <!ENTITY RFC6762 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.6762.xml'>
+  <!ENTITY RFC6763 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.6763.xml'>
   <!ENTITY RFC7230 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7230.xml'>
   <!ENTITY RFC7231 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7231.xml'>
   <!ENTITY RFC7540 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7540.xml'>
@@ -258,8 +260,13 @@ resource constrained devices and unreliable networks.
  
       CoAP interaction with HTTP must traverse a proxy, but at least the common REST architecture makes it easier. 
       CoAP works on port 5683 and offers optional reliable 
-      delivery (thru a retransmission mechanism), support for unicast and multicast (which attempts to address group communication for IoT, but also 
-      introduces complexity for security, IPv6 scoping, wireless reliability, etc), and asynchronous message exchange.
+      delivery (thru a retransmission mechanism), support for unicast and multicast, and asynchronous message exchange.
+      Multicast is touted as required to support group communications. In practice, it is used by IoT SDO's for discovery 
+      which is addressed in mainstream (and even some IoT) scenarios via mDNS <xref target="RFC6762"/> and DNS-SD <xref target="RFC6763"/>. 
+      More general uses of multicast at the application transport, e.g., to address group communication for IoT, 
+      introduces complexity for security, IPv6 scoping, wireless reliability, etc. 
+      </t>
+      <t>
       A typical CoAP message can be between 10 and 20 bytes. 
       </t>
       <t>
@@ -352,9 +359,11 @@ The goals in pursuing a canonical stack are the following:
 To arrive at a canonical stack the mainstream standards-based stack must be properly profiled and optimized. This
 requires optimizing aspects such as:
   <list style='symbols'>
-		<t>Authentication and Authorization framework via OAUTH</t>
+		<t>Authentication and Authorization framework by adapting OAUTH instead of inventing a new system 
+      <xref target="I-D.ietf-ace-oauth-authz" /> </t>
 		<t>Device Management and Object Model/Descriptions (currently being defined)</t>
-		<t>Discovery via mDNS/DNS-SD</t>
+		<t>Discovery via mDNS <xref target="RFC6762"/> and DNS-SD <xref target="RFC6763"/> perhaps augmented with IoT considerations, e.g., 
+        <xref target="I-D.aggarwal-dnssd-optimize-query" /> </t>
     <t>Application Transport based on HTTP/2</t>
 	</list>
   This document deals only with the application layer transport based on HTTP/2. 
@@ -624,9 +633,18 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
    </references>
 
    <references title="Informative References">
+
+      <?rfc include="reference.I-D.ietf-ace-oauth-authz.xml"?>
+      
+      <?rfc include="reference.I-D.aggarwal-dnssd-optimize-query.xml"?>
+     
       &RFC2616;
       
       &RFC2629;
+
+      &RFC6762;
+
+      &RFC6763;
       
       <reference anchor="Deuterium" target="http://robbysimpson.org/deuterium/">
         <front>
