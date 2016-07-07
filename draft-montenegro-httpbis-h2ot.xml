@@ -18,8 +18,13 @@
   <!ENTITY RFC6763 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.6763.xml'>
   <!ENTITY RFC7230 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7230.xml'>
   <!ENTITY RFC7231 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7231.xml'>
+  <!ENTITY RFC7232 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7232.xml'>
+  <!ENTITY RFC7233 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7233.xml'>
+  <!ENTITY RFC7234 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7234.xml'>
+  <!ENTITY RFC7235 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7235.xml'>
   <!ENTITY RFC7540 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7540.xml'>
   <!ENTITY RFC7541 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7541.xml'>
+  <!ENTITY RFC7749 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7749.xml'>
 ]>
 
 <?xml-stylesheet type="text/xsl" href="rfc2629.xml"?>
@@ -38,7 +43,7 @@
     </author>
 
     <author initials="S." surname="Cespedes" fullname="Sandra Cespedes">
-      <organization>Universidad de Chile</organization>
+      <organization abbrev="Universidad de Chile">NIC Chile Research Labs, Universidad de Chile</organization>
       <address>
         <email>scespedes@ing.uchile.cl</email>
       </address>
@@ -200,7 +205,14 @@ This document makes the case for HTTP/2 for IoT.
       producing countless variations and exceptions to its rules. Modern browser and server implementations have very complex and convoluted
       code to deal with parsing and handling the many nuances of the protocol. Because of all this confusion, the HTTPbis working group set out to
       clarify the existing specifications, and after a multi-year effort to clarify its many sources of confusion, it has published a cleaner specification
-      in RFCs 7230-7235. In spite of this, the protocol still has a plethora of legacy issues and remains too verbose.
+      in RFCs 7230-7235 
+      <xref target="RFC7230"/>
+      <xref target="RFC7231"/>
+      <xref target="RFC7232"/>
+      <xref target="RFC7233"/>
+      <xref target="RFC7234"/>
+      <xref target="RFC7235"/>. 
+      In spite of this, the protocol still has a plethora of legacy issues and remains too verbose.
 		</t>
 
 		<t>       
@@ -292,7 +304,7 @@ resource constrained devices and unreliable networks.
    
 </section>
 
-<section title="Importance of Protocol Reuse"> 
+<section anchor="reuse" title="Importance of Protocol Reuse"> 
   <t>
     These protocols often do not exist in a vacuum. Typically, they are mandated as part of a given stack specified by
     any of several IoT consortia (e.g., OFC, AllJoyn, Thread Group, etc). We know that these multiple IoT protocols
@@ -333,7 +345,7 @@ resource constrained devices and unreliable networks.
     change surveillance (surveillance is not merely limited to government agencies of course), and that the fragmentation of ecosystems hinders the deployment of 
     countermeasures (e.g., end-to-end encryption) as that requires more coordination and standardization than currently available. This not only gives rise to rogue 
     surveillance sites such as Shodan (https://www.shodan.io/), but also represents a great opportunity for government agencies’ surveillance needs 
-    <xref target="Going_Dark"></xref>. 
+    <xref target="Clapper"></xref>. 
   </t>
   <t>
     Reusing mainstream protocols affords the benefits of using better-known technology, with easier access to reference implementations (including open source), hiring of people with the required skills and experience, training, etc. They are basically the same arguments that were used originally to justify the use of IP-based networking over custom-built stacks. The message was heard loud and clear but for the most part it was applied to only a limited set of components (e.g., IP, UDP, DTLS). Other components are still being custom built (albeit, on top of IP). 
@@ -614,9 +626,25 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
 
 </section>
 
+  <section anchor="iana" title="IANA Considerations">
+	<t>
+    This document has no considerations for IANA.
+  </t>
+  </section>
+
+  <section anchor="security" title="Security Considerations">
+	<t>
+      <xref target="intro" /> and <xref target="reuse" /> above point out security issues in the current IoT landscape, 
+      namely, the additional attack vectors from 
+      having several bespoke stacks instead of one mainstream stack and protocols.
+      This document seeks to improve security of the IoT by encouraging use of mainstream protocols which are better understood
+      and more thoroughly debugged (both in their specifications as well as in their implementations). 
+  </t>
+  </section>
+
     <section title="Acknowledgements">
       <t>
-    This document was produced using the xml2rfc tool <xref target="RFC2629"/>. 
+    This document was produced using the xml2rfc tool <xref target="RFC2629"/><xref target="RFC7749"/>. 
       </t>
     </section>
 
@@ -628,6 +656,10 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
 
       &RFC7230;
       &RFC7231;
+      &RFC7232;
+      &RFC7233;
+      &RFC7234;
+      &RFC7235;
       &RFC7540;
       &RFC7541;
    </references>
@@ -639,12 +671,14 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
       <?rfc include="reference.I-D.aggarwal-dnssd-optimize-query.xml"?>
      
       &RFC2616;
-      
+
       &RFC2629;
 
       &RFC6762;
 
       &RFC6763;
+
+      &RFC7749;      
       
       <reference anchor="Deuterium" target="http://robbysimpson.org/deuterium/">
         <front>
