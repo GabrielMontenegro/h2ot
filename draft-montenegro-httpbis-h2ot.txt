@@ -13,7 +13,7 @@ Expires: January 8, 2017                            Universidad de Chile
                                                             July 7, 2016
 
 
-                   HTTP/2 for the Internet of Things
+                H2oT: HTTP/2 for the Internet of Things
                   draft-montenegro-httpbis-h2ot-latest
 
 Abstract
@@ -55,7 +55,7 @@ Copyright Notice
 
 Montenegro, et al.       Expires January 8, 2017                [Page 1]
 
-Internet-Draft               HTTP/2 for IoT                    July 2016
+Internet-Draft                    H2oT                         July 2016
 
 
    the Trust Legal Provisions and are provided without warranty as
@@ -111,7 +111,7 @@ Table of Contents
 
 Montenegro, et al.       Expires January 8, 2017                [Page 2]
 
-Internet-Draft               HTTP/2 for IoT                    July 2016
+Internet-Draft                    H2oT                         July 2016
 
 
    suites, authentication/authorization, etc).  Different vendors and
@@ -167,7 +167,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 Montenegro, et al.       Expires January 8, 2017                [Page 3]
 
-Internet-Draft               HTTP/2 for IoT                    July 2016
+Internet-Draft                    H2oT                         July 2016
 
 
       network (a normal network using mainstream stack implementations,
@@ -223,7 +223,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 Montenegro, et al.       Expires January 8, 2017                [Page 4]
 
-Internet-Draft               HTTP/2 for IoT                    July 2016
+Internet-Draft                    H2oT                         July 2016
 
 
    promote its use.  The sections below provide some more details on
@@ -279,7 +279,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 Montenegro, et al.       Expires January 8, 2017                [Page 5]
 
-Internet-Draft               HTTP/2 for IoT                    July 2016
+Internet-Draft                    H2oT                         July 2016
 
 
    It is the second most popular protocol in the survey (behind
@@ -335,7 +335,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 Montenegro, et al.       Expires January 8, 2017                [Page 6]
 
-Internet-Draft               HTTP/2 for IoT                    July 2016
+Internet-Draft                    H2oT                         July 2016
 
 
    from firewall traversal issues, verbosity (as compared to TCP) to
@@ -391,7 +391,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 Montenegro, et al.       Expires January 8, 2017                [Page 7]
 
-Internet-Draft               HTTP/2 for IoT                    July 2016
+Internet-Draft                    H2oT                         July 2016
 
 
    these multiple IoT protocols (and stacks) provide very useful sources
@@ -447,7 +447,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 Montenegro, et al.       Expires January 8, 2017                [Page 8]
 
-Internet-Draft               HTTP/2 for IoT                    July 2016
+Internet-Draft                    H2oT                         July 2016
 
 
    available.  This not only gives rise to rogue surveillance sites such
@@ -503,7 +503,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 Montenegro, et al.       Expires January 8, 2017                [Page 9]
 
-Internet-Draft               HTTP/2 for IoT                    July 2016
+Internet-Draft                    H2oT                         July 2016
 
 
    This document deals only with the application layer transport based
@@ -559,7 +559,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 Montenegro, et al.       Expires January 8, 2017               [Page 10]
 
-Internet-Draft               HTTP/2 for IoT                    July 2016
+Internet-Draft                    H2oT                         July 2016
 
 
    o  SETTINGS_MAX_FRAME_SIZE: this setting allows hosts to specify the
@@ -615,7 +615,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 Montenegro, et al.       Expires January 8, 2017               [Page 11]
 
-Internet-Draft               HTTP/2 for IoT                    July 2016
+Internet-Draft                    H2oT                         July 2016
 
 
    o  while the translation may be trivial for the basic scenarios,
@@ -671,7 +671,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 Montenegro, et al.       Expires January 8, 2017               [Page 12]
 
-Internet-Draft               HTTP/2 for IoT                    July 2016
+Internet-Draft                    H2oT                         July 2016
 
 
    o  An attempt to minimize the headers used has been made while still
@@ -727,7 +727,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 Montenegro, et al.       Expires January 8, 2017               [Page 13]
 
-Internet-Draft               HTTP/2 for IoT                    July 2016
+Internet-Draft                    H2oT                         July 2016
 
 
    HTTP/1.1 200 OK\r\n
@@ -783,7 +783,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 Montenegro, et al.       Expires January 8, 2017               [Page 14]
 
-Internet-Draft               HTTP/2 for IoT                    July 2016
+Internet-Draft                    H2oT                         July 2016
 
 
    <OnOff>
@@ -839,7 +839,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 Montenegro, et al.       Expires January 8, 2017               [Page 15]
 
-Internet-Draft               HTTP/2 for IoT                    July 2016
+Internet-Draft                    H2oT                         July 2016
 
 
    general-purpose transport protocol.  The IETF standardization effort
@@ -895,7 +895,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 Montenegro, et al.       Expires January 8, 2017               [Page 16]
 
-Internet-Draft               HTTP/2 for IoT                    July 2016
+Internet-Draft                    H2oT                         July 2016
 
 
    [RFC7231]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
@@ -951,7 +951,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 Montenegro, et al.       Expires January 8, 2017               [Page 17]
 
-Internet-Draft               HTTP/2 for IoT                    July 2016
+Internet-Draft                    H2oT                         July 2016
 
 
    [RFC2616]  Fielding, R., Gettys, J., Mogul, J., Frystyk, H.,
@@ -1007,7 +1007,7 @@ Internet-Draft               HTTP/2 for IoT                    July 2016
 
 Montenegro, et al.       Expires January 8, 2017               [Page 18]
 
-Internet-Draft               HTTP/2 for IoT                    July 2016
+Internet-Draft                    H2oT                         July 2016
 
 
    [CoAP_integration]
