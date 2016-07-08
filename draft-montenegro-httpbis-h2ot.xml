@@ -32,6 +32,7 @@
 <?xml-stylesheet type="text/xsl" href="rfc2629.xml"?>
 
 <?rfc toc="yes" symrefs="yes"?>
+<?rfc sortrefs="yes" ?> 
 
 <rfc ipr="trust200902" category="info" docName="draft-montenegro-httpbis-h2ot-latest">
   <front>
@@ -667,6 +668,12 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
   <t>
       <xref target="proxies" /> point out another issue with the current IoT landscape: the proliferation of gateways and proxies. Whereas they serve useful functions in IoT, allowing more constrained nodes to have much lower duty cycles or filtering them from much traffic, there are inherent security issues, not the least of which is that they break end-to-end security. Enabling more mainstream protocols would not preclude using a proxy or gateway whenever the tradeoff dictated it, but would also allow for end-to-end security. 
   </t>
+  <t>
+      Given the security challenges in IoT scenarios, HTTP/2 is assumed to use TLS services. In Internet scenarios, <xref target="RFC7540" /> has clear guidance in this respect. In Constrained network scenarios, the guidance for IoT is <xref target="I-D.ietf-dice-profile" />. However, these are currently at odds. For example, Section 4.2 of <xref target="I-D.ietf-dice-profile" /> mandates the ciphersuite
+      TLS_PSK_WITH_AES_128_CCM_8 for preshared key-based authentication (quite common in IoT deployments). 
+      On the other hand, Appendix A of <xref target="RFC7540" /> includes TLS_PSK_WITH_AES_128_CCM_8 
+      in the HTTP/2 Black List of disallowed cipher suites, despite it being an AEAD ciphersuite. This is still to be resolved. The other IoT ciphersuite mandated by <xref target="I-D.ietf-dice-profile" />, namely, TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8 (used for both certificate-based and Raw Public Key-based authentication) is not on the HTTP/2 Black List.
+  </t>
   </section>
 
     <section title="Acknowledgements">
@@ -692,6 +699,9 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
       &RFC7235;
       &RFC7540;
       &RFC7541;
+
+      <?rfc include="reference.I-D.ietf-dice-profile.xml"?>
+
    </references>
 
    <references title="Informative References">
