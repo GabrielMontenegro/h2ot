@@ -247,8 +247,16 @@ resource constrained devices and unreliable networks.
 		<t>       
       It is the second most popular protocol in the survey (behind HTTP/1.1) with 52% of developers using it. In the internet scenario,
       however, TLS is probably required. This additional TLS overhead renders all
-      protocols slightly larger, so, e.g., MQTT loses some relative size advantage. There is some effort on MQTT over UDP, but, by far 
-      it is most commonly deployed over TCP (port 8833 when over TLS,
+      protocols slightly larger, so, e.g., MQTT loses some relative size advantage. 
+    </t>
+    <t>
+      The MQTT protocol requires an underlying transport that provides an ordered, lossless, stream of bytes from the Client to Server and Server to Client.  It cannot be used over UDP. There is an alternative (and not standardized) variant called MQTT-SN  (previously called MQTT-S) which can use UDP, Zigbee or other datagram transports, but this is a substantially different protocol which has been tailored to meet the needs of small, battery-powered sensors connected by wireless sensor networks (WSNs), and relies upon a MQTT-SN Gateway or forwarder for external communications.
+      </t>
+      <t>
+      MQTT is closely tied to PUBLISH/SUBSCRIBE operations and this is the only mode of message transfer.  This means that MQTT cannot be used for “node to node” communications because a server is required (the server forwards messages between publishers and subscribers, manages subscriptions, and performs user authorization functions.)  The exclusive use of publish/subscribe operations  can complicate some IoT operations, such as request-response traffic, and transferring large payloads (e.g. firmware updates).  It is sometimes desirable to use a different protocol (like HTTP) for transferring large payloads, even though MQTT supports a maximum per-message payload size of 256 MiB.  The OASIS MQTT-TC is considering proposals involving changes in handling request-response traffic and large message transfers.
+      </t>
+      <t>
+      MQTT is deployed over TCP (port 8833 when over TLS,
       port 1883 without TLS). Even when using TLS, it has the well-known firewall traversal issues common to any protocol not over port 
       443.
 		</t>
@@ -302,7 +310,7 @@ resource constrained devices and unreliable networks.
     
  <section title="Protocols Comparison"> 
 	<t>
-    The aformentioned protocols have been compared in both experimental and emulated environments <xref target="IEEE_survey"></xref>. Previous reports show that performance is highly dependent on the network conditions: in good link conditions with low packet loss, MQTT delivers packets with lower delay than CoAP, but CoAP outperforms when high packet losses are present; in terms of packet sizes, if packet loss is under 25% and messages are of a small size, CoAP demonstrates a better link usage than MQTT. However, other experiments report a better performance of MQTT in hight traffic/high packet loss scenarios  <xref target="IoT_analysis"></xref>. CoAP has also been compared to HTTP/1.1. In terms of power consumption and response time, naturally CoAP behaves better than HTTP/1.1 thanks to the reduced packet sizes.</t>
+    The aformentioned protocols have been compared in both experimental and emulated environments <xref target="IEEE_survey"></xref>. Previous reports show that performance is highly dependent on the network conditions: in good link conditions with low packet loss, MQTT delivers packets with lower delay than CoAP, but CoAP outperforms when high packet losses are present; in terms of packet sizes, if packet loss is under 25% and messages are of a small size, CoAP demonstrates a better link usage than MQTT. However, other experiments report a better performance of MQTT in high traffic/high packet loss scenarios  <xref target="IoT_analysis"></xref>. CoAP has also been compared to HTTP/1.1. In terms of power consumption and response time, naturally CoAP behaves better than HTTP/1.1 thanks to the reduced packet sizes.</t>
      
      <t>Coexistence among the protocols has also been tested with varied network configurations. For the most part, interaction of CoAP with HTTP has been studied <xref target="Web_things"></xref>, demonstrating successful exchange when there is a CoAP server running on a constrained node and the HTTP client is requesting resources from it, or when there is a CoAP client requesting resources from an HTTP server. In both cases a proxy is necessary to enable translation between the protocols. Another network configuration with a CoAP client - CoAP proxy - CoAP server has been compared to the CoAP client - CoAP/HTTP proxy - HTTP server configuration, in which case the response times of the only-CoAP configuration resulted to be lower even when the number of concurrent requests increases <xref target="CoAP_integration"></xref>. </t>
      
@@ -349,7 +357,7 @@ resource constrained devices and unreliable networks.
 	</list> 
   </t>
   <t>
-    Furthermore, multiple stacks defeat the purpose of the “I” in IoT: interoperability. This goes back to the issue of security. A recent Harvard report on the state 
+    A recent Harvard report on the state 
     of surveillance and erosion of privacy <xref target="Going_Dark"></xref> concludes among its findings that the projected substantial growth of IoT will drastically
     change surveillance (surveillance is not merely limited to government agencies of course), and that the fragmentation of ecosystems hinders the deployment of 
     countermeasures (e.g., end-to-end encryption) as that requires more coordination and standardization than currently available. This not only gives rise to rogue 
@@ -357,7 +365,7 @@ resource constrained devices and unreliable networks.
     <xref target="Clapper"></xref>. 
   </t>
   <t>
-    Reusing mainstream protocols affords the benefits of using better-known technology, with easier access to reference implementations (including open source), hiring of people with the required skills and experience, training, etc. They are basically the same arguments that were used originally to justify the use of IP-based networking over custom-built stacks. The message was heard loud and clear but for the most part it was applied to only a limited set of components (e.g., IP, UDP, DTLS). Other components are still being custom built (albeit, on top of IP). 
+    Furthermore, multiple stacks defeat one of the main benefits of the “I” in IoT: interoperability. Also, reusing mainstream protocols affords the benefits of using better-known technology, with easier access to reference implementations (including open source), people with the required skills and experience, training, etc. These are basically the same arguments that were used originally to justify the use of IP-based networking over custom-built stacks. The message was heard loud and clear but for the most part it was applied to only a limited set of components (e.g., IP, UDP, DTLS). Other components are still being custom built (albeit, on top of IP). 
   </t>
 </section>
 
@@ -663,7 +671,7 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
 
     <section title="Acknowledgements">
       <t>
-        Thanks to the following individuals for helpful comments and discussion: Brian Raymor, Dave Thaler. 
+        Thanks to the following individuals for helpful comments and discussion: Brian Raymor, Dave Thaler, Ed Briggs. 
       </t>
       <t>
         This document was produced using the xml2rfc tool <xref target="RFC2629"/><xref target="RFC7749"/>. 
