@@ -22,6 +22,8 @@
   <!ENTITY RFC7233 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7233.xml'>
   <!ENTITY RFC7234 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7234.xml'>
   <!ENTITY RFC7235 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7235.xml'>
+  <!ENTITY RFC7252 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7252.xml'>
+  <!ENTITY RFC7452 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7452.xml'>
   <!ENTITY RFC7540 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7540.xml'>
   <!ENTITY RFC7541 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7541.xml'>
   <!ENTITY RFC7749 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7749.xml'>
@@ -121,7 +123,7 @@ This document makes the case for HTTP/2 for IoT.
 
     <t>
     Let's look at some application communication patterns to establish some
-    common language:
+    common language (see also section 2 of <xref target="RFC7452" /> for a related discussion):
     
    <list style='hanging'>
 		<t hangText="node to node:"> 
@@ -142,6 +144,9 @@ This document makes the case for HTTP/2 for IoT.
       A node on a constrained network engages in direct communcation with unconstrained networks, typically a cloud service on the Internet.
 		</t>
 	</list>   
+  </t>
+  <t>
+  In the above, a "node" may, in fact, be multiple nodes when engaging in group communication. Group communications (e.g., via multicast) are commonly used for discovery or routing (see also <xref target="coap" />).
 	</t>
 
 	<t>
@@ -149,13 +154,14 @@ This document makes the case for HTTP/2 for IoT.
 
    <list style='hanging'>
 		<t hangText="Constrained network scenario:"> 
-			A constrained network scenario includes node to node and node to gateway exchanges.
+			A constrained network scenario includes node to node and node to gateway exchanges. Group communications are another typical aspect of these constrained networks.
 		</t>
     
 		<t hangText="Internet scenario:"> 
 			An Internet scenario includes gateway to cloud and node to cloud exchanges.
 		</t>
 	</list> 
+   
 	</t>
   
 	<t>
@@ -232,28 +238,36 @@ This document makes the case for HTTP/2 for IoT.
 
     <section title="MQTT"> 
 		<t> 
-      MQ Telemetry Transport (MQTT) is a publish/subscribe messaging protocol that runs on top of TCP. It was created by IBM, now being standardized
-      by OASIS. It is popular in the Internet scenario (node to cloud, gateway to cloud) and it aims to connect embedded devices and networks with applications
+      MQ Telemetry Transport (MQTT) is a publish/subscribe messaging protocol that runs on top of TCP. It was created by IBM.
+      Version 3.1.1 is available as an OASIS standard <xref target="mqtt_oasis" /> and as an ISO publication <xref target="mqtt_iso" />. It is popular in the Internet scenario (node to cloud, gateway to cloud) and it aims to connect embedded devices and networks with applications
 and middleware. It is a compact, binary protocol, and is very popular in certain application domains. It has been known as a protocol suitable to be used in 
 resource constrained devices and unreliable networks.
 		</t>
 
 		<t>       
       It is the second most popular protocol in the survey (behind HTTP/1.1) with 52% of developers using it. In the internet scenario,
-      however, TLS is mandatory. In practice, additional TLS overhead is required for all Internet scenario exchanges, so all
-      protocols are slightly larger and MQTT loses some relative size advantage. There is a spec for MQTT over UDP, but, by far 
-      it is most commonly deployed over TCP (port 8833 when over TLS,
+      however, TLS is probably required. This additional TLS overhead renders all
+      protocols slightly larger, so, e.g., MQTT loses some relative size advantage. 
+    </t>
+    <t>
+      The MQTT protocol requires an underlying transport that provides an ordered, lossless, stream of bytes from the Client to Server and Server to Client.  It cannot be used over UDP. There is an alternative (and not standardized) variant called MQTT-SN  (previously called MQTT-S) which can use UDP, Zigbee or other datagram transports, but this is a substantially different protocol which has been tailored to meet the needs of small, battery-powered sensors connected by wireless sensor networks (WSNs), and relies upon a MQTT-SN Gateway or forwarder for external communications.
+      </t>
+      <t>
+      MQTT is closely tied to PUBLISH/SUBSCRIBE operations and this is the only mode of message transfer.  This means that MQTT cannot be used for “node to node” communications because a server is required (the server forwards messages between publishers and subscribers, manages subscriptions, and performs user authorization functions.)  The exclusive use of publish/subscribe operations  can complicate some IoT operations, such as request-response traffic, and transferring large payloads (e.g. firmware updates).  It is sometimes desirable to use a different protocol (like HTTP) for transferring large payloads, even though MQTT supports a maximum per-message payload size of 256 MiB.  The OASIS MQTT-TC is considering proposals involving changes in handling request-response traffic and large message transfers.
+      </t>
+      <t>
+      MQTT is deployed over TCP (port 8833 when over TLS,
       port 1883 without TLS). Even when using TLS, it has the well-known firewall traversal issues common to any protocol not over port 
       443.
 		</t>
 		
 	</section>
 
-    <section title="CoAP"> 
+    <section anchor="coap" title="CoAP"> 
 		<t> 
-      CoAP is a compact, binary UDP-based protocol based on RESTful principles and closely patterned after HTTP. 
+      CoAP is a compact, binary, UDP-based protocol based on RESTful principles and closely patterned after HTTP. 
       It has been designed to be used in constrained devices and constrained networks. 
-      The protocol specification has been published in RFC 7252, although additional functionalities such as congestion control, 
+      The protocol specification has been published <xref target="RFC7252" />, although additional functionalities such as congestion control, 
       block-wise transfer, TCP and TLS transfer and HTTP mapping are still being specified. 
       </t>
 
@@ -261,7 +275,7 @@ resource constrained devices and unreliable networks.
       <t>
       The protocol meets IoT requirements through the modification of some HTTP functionalities to achieve low-power consumption and operation over lossy links.
       To avoid undesirable packet fragmentation the CoAP specification provides an upper bound to the message size, dictating that a CoAP message,
-      appropriately encapsulated, SHOULD fit within a single IP datagram
+      appropriately encapsulated, SHOULD fit within a single IP datagram:
 
       <list style='hanging'>
 		<t>
@@ -269,31 +283,34 @@ resource constrained devices and unreliable networks.
                   headers, good upper bounds are 1152 bytes for the message size and 1024 bytes for the payload size. 
 		</t>
       </list>
- 
-      CoAP interaction with HTTP must traverse a proxy, but at least the common REST architecture makes it easier. 
+      </t>
+      <t> 
+      CoAP interaction with HTTP must traverse a proxy, with the concomitant issues of breaking end-to-end security (<xref target="proxies" />), but at least the common REST architecture makes it easier. 
+      </t>
+      <t>
       CoAP works on port 5683 and offers optional reliable 
       delivery (thru a retransmission mechanism), support for unicast and multicast, and asynchronous message exchange.
-      Multicast is touted as required to support group communications. In practice, it is used by IoT SDO's for discovery 
-      which is addressed in mainstream (and even some IoT) scenarios via mDNS <xref target="RFC6762"/> and DNS-SD <xref target="RFC6763"/>. 
-      More general uses of multicast at the application transport, e.g., to address group communication for IoT, 
+      Multicast (see <xref target="intro" /> is typically used by IoT SDO's for routing and discovery.
+      A common use of multicast within CoAP is for discovery, something addressed in mainstream (and even some IoT) scenarios via mDNS <xref target="RFC6762"/> and DNS-SD <xref target="RFC6763"/>. 
+      More general uses of multicast within CoAP (and, in general, at the application transport, e.g., to address group communication for IoT), 
       introduces complexity for security, IPv6 scoping, wireless reliability, etc. 
       </t>
       <t>
       A typical CoAP message can be between 10 and 20 bytes. 
       </t>
       <t>
-      It is the third most popular protocol in the survey with a 21% preference. Nevertheless, since CoAP is UDP-based, it also suffers from firewall traversal issues, verbosity (as compared to TCP) to maintain state in NAT boxes and lack of integration with existing enterprise infrastructures. There is ongoing work to specify the use of CoAP over TCP as well as CoAP over TLS, in an attempt to overcome issues with middleboxes and improve its applicability to Internet scenarios.
+      It is the third most popular protocol in the survey with a 21% preference. Nevertheless, since CoAP is UDP-based, in the Internet scenario it also suffers from firewall traversal issues, verbosity (as compared to TCP) to maintain state in NAT boxes and lack of integration with existing enterprise infrastructures. There is ongoing work to specify the use of CoAP over TCP as well as CoAP over TLS, in an attempt to overcome issues with middleboxes and improve its applicability to Internet scenarios.
 		</t>
     <t>
       As noted above, there is much ongoing work on CoAP, and much of it seeks to define a transport on top of UDP. This is a very complex
-      task not to be underestimated. QUIC is also embarking on this task, but it is a mainstream effort and consequently
-      benefits from many more resources by the networking community at large. 
+      task not to be underestimated. QUIC is also embarking on this task, but it appears to be benefitting 
+      from many more resources within the networking community at large. 
     </t> 
     </section>
     
  <section title="Protocols Comparison"> 
 	<t>
-    The aformentioned protocols have been compared in both experimental and emulated environments <xref target="IEEE_survey"></xref>. Previous reports show that performance is highly dependent on the network conditions: in good link conditions with low packet loss, MQTT delivers packets with lower delay than CoAP, but CoAP outperforms when high packet losses are present; in terms of packet sizes, if packet loss is under 25% and messages are of a small size, CoAP demonstrates a better link usage than MQTT. However, other experiments report a better performance of MQTT in hight traffic/high packet loss scenarios  <xref target="IoT_analysis"></xref>. CoAP has also been compared to HTTP/1.1. In terms of power consumption and response time, naturally CoAP behaves better than HTTP/1.1 thanks to the reduced packet sizes.</t>
+    The aformentioned protocols have been compared in both experimental and emulated environments <xref target="IEEE_survey"></xref>. Previous reports show that performance is highly dependent on the network conditions: in good link conditions with low packet loss, MQTT delivers packets with lower delay than CoAP, but CoAP outperforms when high packet losses are present; in terms of packet sizes, if packet loss is under 25% and messages are of a small size, CoAP demonstrates a better link usage than MQTT. However, other experiments report a better performance of MQTT in high traffic/high packet loss scenarios  <xref target="IoT_analysis"></xref>. CoAP has also been compared to HTTP/1.1. In terms of power consumption and response time, naturally CoAP behaves better than HTTP/1.1 thanks to the reduced packet sizes.</t>
      
      <t>Coexistence among the protocols has also been tested with varied network configurations. For the most part, interaction of CoAP with HTTP has been studied <xref target="Web_things"></xref>, demonstrating successful exchange when there is a CoAP server running on a constrained node and the HTTP client is requesting resources from it, or when there is a CoAP client requesting resources from an HTTP server. In both cases a proxy is necessary to enable translation between the protocols. Another network configuration with a CoAP client - CoAP proxy - CoAP server has been compared to the CoAP client - CoAP/HTTP proxy - HTTP server configuration, in which case the response times of the only-CoAP configuration resulted to be lower even when the number of concurrent requests increases <xref target="CoAP_integration"></xref>. </t>
      
@@ -307,7 +324,7 @@ resource constrained devices and unreliable networks.
 <section anchor="reuse" title="Importance of Protocol Reuse"> 
   <t>
     These protocols often do not exist in a vacuum. Typically, they are mandated as part of a given stack specified by
-    any of several IoT consortia (e.g., OFC, AllJoyn, Thread Group, etc). We know that these multiple IoT protocols
+    any of several IoT consortia (e.g., OCF, AllSeen Alliance/AllJoyn, Thread Group). We know that these multiple IoT protocols
     (and stacks) provide very useful sources of information for prying eyes (See “US intelligence chief says we might use the IoT to spy on you” 
     at http://www.wired.com/2012/03/petraeus-tv-remote/). Security and privacy issues are exacerbated because:
     
@@ -340,7 +357,7 @@ resource constrained devices and unreliable networks.
 	</list> 
   </t>
   <t>
-    Furthermore, multiple stacks defeat the purpose of the “I” in IoT: interoperability. This goes back to the issue of security. A recent Harvard report on the state 
+    A recent Harvard report on the state 
     of surveillance and erosion of privacy <xref target="Going_Dark"></xref> concludes among its findings that the projected substantial growth of IoT will drastically
     change surveillance (surveillance is not merely limited to government agencies of course), and that the fragmentation of ecosystems hinders the deployment of 
     countermeasures (e.g., end-to-end encryption) as that requires more coordination and standardization than currently available. This not only gives rise to rogue 
@@ -348,14 +365,14 @@ resource constrained devices and unreliable networks.
     <xref target="Clapper"></xref>. 
   </t>
   <t>
-    Reusing mainstream protocols affords the benefits of using better-known technology, with easier access to reference implementations (including open source), hiring of people with the required skills and experience, training, etc. They are basically the same arguments that were used originally to justify the use of IP-based networking over custom-built stacks. The message was heard loud and clear but for the most part it was applied to only a limited set of components (e.g., IP, UDP, DTLS). Other components are still being custom built (albeit, on top of IP). 
+    Furthermore, multiple stacks defeat one of the main benefits of the “I” in IoT: interoperability. Also, reusing mainstream protocols affords the benefits of using better-known technology, with easier access to reference implementations (including open source), people with the required skills and experience, training, etc. These are basically the same arguments that were used originally to justify the use of IP-based networking over custom-built stacks. The message was heard loud and clear but for the most part it was applied to only a limited set of components (e.g., IP, UDP, DTLS). Other components are still being custom built (albeit, on top of IP). 
   </t>
 </section>
 
 <section title="HTTP/2 in IoT"> 
   <t>
     As noted above, for the foreseeable future the IoT landscape requires several stacks. Thinking about a canonical stack based on
-    mainstream protocols is not an exercise in the delusion that one single stack will be enough. Rather, it is an attempt to defined
+    mainstream protocols is not an exercise in the delusion that one single stack will be enough. Rather, it is an attempt to define
     an option that can serve IoT better into the future, and one that can be recommended whenever there is a choice (often there isn't one). 
   </t>
 <t>
@@ -372,12 +389,14 @@ To arrive at a canonical stack the mainstream standards-based stack must be prop
 requires optimizing aspects such as:
   <list style='symbols'>
 		<t>Authentication and Authorization framework by adapting OAUTH instead of inventing a new system 
-      <xref target="I-D.ietf-ace-oauth-authz" /> </t>
-		<t>Device Management and Object Model/Descriptions (currently being defined)</t>
+      <xref target="I-D.ietf-ace-oauth-authz" />. </t>
+		<t>Device Management and Object Model/Descriptions (currently being defined).</t>
 		<t>Discovery via mDNS <xref target="RFC6762"/> and DNS-SD <xref target="RFC6763"/> perhaps augmented with IoT considerations, e.g., 
-        <xref target="I-D.aggarwal-dnssd-optimize-query" /> </t>
-    <t>Application Transport based on HTTP/2</t>
+        <xref target="I-D.aggarwal-dnssd-optimize-query" />. Another option to investigate is that of HTTP/2 over multicast. Whereas there have been some forays into HTTP over multicast, it is not nearly as well deployed, implemented and understood as mDNS. </t>
+    <t>Application Transport based on HTTP/2.</t>
 	</list>
+  </t>
+  <t>
   This document deals only with the application layer transport based on HTTP/2. 
   </t>
   <t>
@@ -397,8 +416,8 @@ requires optimizing aspects such as:
   <t>HTTP/2 has many negotiable settings that can improve its performance for IoT applications by reducing bandwidth, codespace, and RAM requirements. Specifically, the following settings and values have been found to be useful in IoT applications:
     <list style='symbols'>
       <t> SETTINGS_HEADER_TABLE_SIZE: this setting allows hosts to limit the size of the header compression table used for decoding, reducing required RAM, but potentially increasing bandwidth requirements. Initial value per HTTP/2 is 4096. IoT scenarios might benefit from changing this to a smaller value (e.g., 512), however, to avoid increased bandwidth usage, IoT scenarios should judiciously use HTTP headers and the dynamic header table <xref target="RFC7541"/>.  </t>
-      <t> SETTINGS_ENABLE_PUSH: This setting allows to enable/disable server push. This functionality may not be required in some IoT applications. The initial value per HTTP/2 is 1.</t>
-      <t> SETTINGS_MAX_CONCURRENT_STREAMS: this setting allows a sender to limit the number of simultaneous streams that a receiver can create for a connection. HTTP/2 recommends this value be no smaller than 100. IoS scenarios may wish to limit this to a much smaller number, such as 2 or 3. </t>
+      <t> SETTINGS_ENABLE_PUSH: This setting allows clients to enable or disable server push. This functionality may not be required in some IoT applications. The initial value per HTTP/2 is 1.</t>
+      <t> SETTINGS_MAX_CONCURRENT_STREAMS: this setting allows a sender to limit the number of simultaneous streams that a receiver can create for a connection. HTTP/2 recommends this value be no smaller than 100. IoT scenarios may wish to limit this to a much smaller number, such as 2 or 3. </t>
       <t> SETTINGS_INITIAL_WINDOW_SIZE: this setting allows hosts to limit the flow control window, potentially reducing buffer requirements at the expense of potentially underutilized bandwidth-delay products. Per HTTP/2 the initial value is 2^16-1 (65,535) octets. IoT scenarios may wish to limit this to smaller values in accordance with the node's constraints (e.g., a few kilo-octets).
  </t>
       <t> SETTINGS_MAX_FRAME_SIZE: this setting allows hosts to specify the largest frame size they are willing to receive. Per HTTP/2 the initial value is 2^14 (16,384) octets. Somewhat counterintuitively, IoT hosts may wish to leave this value large and rely on flow control to avoid unnecessary framing overhead. </t>
@@ -410,7 +429,7 @@ requires optimizing aspects such as:
 
 <section title="Negotiation of HTTP/2 for IoT"> 
   <t>
-    For Internet scenarios, it is assumed that HTTP/2 runs over TLS. Accordingly, the ALPN negotiation in section 3.3 of <xref target="RFC7540"/> applies. As seen above, an IoT scenario may wish to depart from the default SETTINGS. To do so, the usual SETTINGS negotiation applies.
+    For Constrained and Internet scenarios, it is assumed that HTTP/2 runs over TLS. Accordingly, the ALPN negotiation in section 3.3 of <xref target="RFC7540"/> applies. As seen above, an IoT scenario may wish to depart from the default SETTINGS. To do so, the usual SETTINGS negotiation applies.
 	  In this case, the initial SETTINGS negotiation setup is based on the first message exchange initiated by the client.
     This is simpler than general HTTP/2 case: not having an in-the-clear Upgrade path means the client is always in control of first HTTP/2 message, including any SETTINGS changes it may wish.
   </t>
@@ -419,7 +438,7 @@ requires optimizing aspects such as:
   </t>
 </section>
 
-<section title="Gateway and Proxying Issues"> 
+<section anchor="proxies" title="Gateway and Proxying Issues"> 
 
   <t>The proliferation of application and security protocols in the IoT has produced the deployments of islands of IoT devices, each using one of the several protocols
      available. However, usually an IoT deployment needs to communicate to another one, or at least needs to communicate with the Web, both because they have to upload
@@ -439,6 +458,9 @@ requires optimizing aspects such as:
 </section>
 
 <section title="Implementation Considerations"> 
+  <t> This section assumes HTTP/2 over TCP. 
+  </t>
+  
   <t> In addition to underlying stack considerations with respect to IPv4, IPv6, TCP, and TLS, there are implementation considerations for HTTP/2 for IoT. </t>
   
   <t> A primary consideration is the number of allowed simultaneous HTTP/2 connections. As each connection has associated overhead, as well as overhead for each stream, constrained hosts may wish to limit their number of simultaneous connections. However, implementers should consider that some popular browsers require more than one connection to operate. </t>
@@ -457,6 +479,8 @@ requires optimizing aspects such as:
       <t> An attempt to minimize the headers used has been made while still maintaining RFC compliance </t>
       <t> No entries are made into the HTTP/2 dynamic table, thus removing some potential optimization </t>
       <t> Connection establishment and teardown have been ignored, though clearly these are important considerations for IoT application protocols </t>
+      <t> Only happy path transmissions are shown, thus no comparison of failure modes or retransmissions is given </t>
+
     </list>
   </t>
 
@@ -605,7 +629,7 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
    </t>
 
    <t>
-    QUIC will use TLS 1.3. Accordingly, connections will commonly benefit from 0-RTT as defined by TLS 1.3, 
+    QUIC will use DTLS 1.3. Accordingly, connections will commonly benefit from 0-RTT as defined by TLS 1.3, 
     meaning that on most QUIC connections, data can be sent immediately without waiting for a reply from the server.
     Furthermore, packets are always authenticated and typically the payload is fully encrypted.
    </t>
@@ -640,11 +664,17 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
       This document seeks to improve security of the IoT by encouraging use of mainstream protocols which are better understood
       and more thoroughly debugged (both in their specifications as well as in their implementations). 
   </t>
+  <t>
+      <xref target="proxies" /> point out another issue with the current IoT landscape: the proliferation of gateways and proxies. Whereas they serve useful functions in IoT, allowing more constrained nodes to have much lower duty cycles or filtering them from much traffic, there are inherent security issues, not the least of which is that they break end-to-end security. Enabling more mainstream protocols would not preclude using a proxy or gateway whenever the tradeoff dictated it, but would also allow for end-to-end security. 
+  </t>
   </section>
 
     <section title="Acknowledgements">
       <t>
-    This document was produced using the xml2rfc tool <xref target="RFC2629"/><xref target="RFC7749"/>. 
+        Thanks to the following individuals for helpful comments and discussion: Brian Raymor, Dave Thaler, Ed Briggs. 
+      </t>
+      <t>
+        This document was produced using the xml2rfc tool <xref target="RFC2629"/><xref target="RFC7749"/>. 
       </t>
     </section>
 
@@ -678,6 +708,10 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
 
       &RFC6763;
 
+      &RFC7252;      
+
+      &RFC7452;      
+
       &RFC7749;      
       
       <reference anchor="Deuterium" target="http://robbysimpson.org/deuterium/">
@@ -687,7 +721,29 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
           <date month="June" day="23" year="2016" />
         </front>
       </reference>
-      
+
+      <reference anchor="mqtt_oasis" 
+        target="https://www.oasis-open.org/news/announcements/mqtt-version-3-1-1-becomes-an-oasis-standard">
+        <front>
+          <title>MQTT Version 3.1.1 becomes an OASIS Standard</title>
+          <author>
+            <organization>OASIS</organization>
+          </author>
+          <date month="October" day="" year="2014" />
+        </front>
+      </reference>
+
+      <reference anchor="mqtt_iso" 
+        target="http://www.iso.org/iso/catalogue_detail.htm?csnumber=69466">
+        <front>
+          <title>ISO/IEC 20922:2016 Information technology -- Message Queuing Telemetry Transport (MQTT) v3.1.1</title>
+          <author>
+            <organization>ISO</organization>
+          </author>
+          <date month="June" day="" year="2016" />
+        </front>
+      </reference>
+
       <reference anchor="Eclipse_survey"
         target="http://iot.ieee.org/images/files/pdf/iot-developer-survey-2016-report-final.pdf">
         <front>
