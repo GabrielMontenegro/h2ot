@@ -251,7 +251,7 @@ resource constrained devices and unreliable networks.
 
     <section title="CoAP"> 
 		<t> 
-      CoAP is a compact, binary UDP-based protocol based on RESTful principles and closely patterned after HTTP. 
+      CoAP is a compact, binary, UDP-based protocol based on RESTful principles and closely patterned after HTTP. 
       It has been designed to be used in constrained devices and constrained networks. 
       The protocol specification has been published in RFC 7252, although additional functionalities such as congestion control, 
       block-wise transfer, TCP and TLS transfer and HTTP mapping are still being specified. 
@@ -261,7 +261,7 @@ resource constrained devices and unreliable networks.
       <t>
       The protocol meets IoT requirements through the modification of some HTTP functionalities to achieve low-power consumption and operation over lossy links.
       To avoid undesirable packet fragmentation the CoAP specification provides an upper bound to the message size, dictating that a CoAP message,
-      appropriately encapsulated, SHOULD fit within a single IP datagram
+      appropriately encapsulated, SHOULD fit within a single IP datagram:
 
       <list style='hanging'>
 		<t>
@@ -269,8 +269,11 @@ resource constrained devices and unreliable networks.
                   headers, good upper bounds are 1152 bytes for the message size and 1024 bytes for the payload size. 
 		</t>
       </list>
- 
-      CoAP interaction with HTTP must traverse a proxy, but at least the common REST architecture makes it easier. 
+      </t>
+      <t> 
+      CoAP interaction with HTTP must traverse a proxy, with the concomitant issues of breaking end-to-end security (<xref target="proxies" />), but at least the common REST architecture makes it easier. 
+      </t>
+      <t>
       CoAP works on port 5683 and offers optional reliable 
       delivery (thru a retransmission mechanism), support for unicast and multicast, and asynchronous message exchange.
       Multicast is touted as required to support group communications. In practice, it is used by IoT SDO's for discovery 
@@ -307,7 +310,7 @@ resource constrained devices and unreliable networks.
 <section anchor="reuse" title="Importance of Protocol Reuse"> 
   <t>
     These protocols often do not exist in a vacuum. Typically, they are mandated as part of a given stack specified by
-    any of several IoT consortia (e.g., OFC, AllJoyn, Thread Group, etc). We know that these multiple IoT protocols
+    any of several IoT consortia (e.g., OFC, AllSeen Alliance/AllJoyn, Thread Group). We know that these multiple IoT protocols
     (and stacks) provide very useful sources of information for prying eyes (See “US intelligence chief says we might use the IoT to spy on you” 
     at http://www.wired.com/2012/03/petraeus-tv-remote/). Security and privacy issues are exacerbated because:
     
@@ -398,7 +401,7 @@ requires optimizing aspects such as:
     <list style='symbols'>
       <t> SETTINGS_HEADER_TABLE_SIZE: this setting allows hosts to limit the size of the header compression table used for decoding, reducing required RAM, but potentially increasing bandwidth requirements. Initial value per HTTP/2 is 4096. IoT scenarios might benefit from changing this to a smaller value (e.g., 512), however, to avoid increased bandwidth usage, IoT scenarios should judiciously use HTTP headers and the dynamic header table <xref target="RFC7541"/>.  </t>
       <t> SETTINGS_ENABLE_PUSH: This setting allows to enable/disable server push. This functionality may not be required in some IoT applications. The initial value per HTTP/2 is 1.</t>
-      <t> SETTINGS_MAX_CONCURRENT_STREAMS: this setting allows a sender to limit the number of simultaneous streams that a receiver can create for a connection. HTTP/2 recommends this value be no smaller than 100. IoS scenarios may wish to limit this to a much smaller number, such as 2 or 3. </t>
+      <t> SETTINGS_MAX_CONCURRENT_STREAMS: this setting allows a sender to limit the number of simultaneous streams that a receiver can create for a connection. HTTP/2 recommends this value be no smaller than 100. IoT scenarios may wish to limit this to a much smaller number, such as 2 or 3. </t>
       <t> SETTINGS_INITIAL_WINDOW_SIZE: this setting allows hosts to limit the flow control window, potentially reducing buffer requirements at the expense of potentially underutilized bandwidth-delay products. Per HTTP/2 the initial value is 2^16-1 (65,535) octets. IoT scenarios may wish to limit this to smaller values in accordance with the node's constraints (e.g., a few kilo-octets).
  </t>
       <t> SETTINGS_MAX_FRAME_SIZE: this setting allows hosts to specify the largest frame size they are willing to receive. Per HTTP/2 the initial value is 2^14 (16,384) octets. Somewhat counterintuitively, IoT hosts may wish to leave this value large and rely on flow control to avoid unnecessary framing overhead. </t>
@@ -419,7 +422,7 @@ requires optimizing aspects such as:
   </t>
 </section>
 
-<section title="Gateway and Proxying Issues"> 
+<section anchor="proxies" title="Gateway and Proxying Issues"> 
 
   <t>The proliferation of application and security protocols in the IoT has produced the deployments of islands of IoT devices, each using one of the several protocols
      available. However, usually an IoT deployment needs to communicate to another one, or at least needs to communicate with the Web, both because they have to upload
@@ -457,6 +460,8 @@ requires optimizing aspects such as:
       <t> An attempt to minimize the headers used has been made while still maintaining RFC compliance </t>
       <t> No entries are made into the HTTP/2 dynamic table, thus removing some potential optimization </t>
       <t> Connection establishment and teardown have been ignored, though clearly these are important considerations for IoT application protocols </t>
+      <t> Only happy path transmissions are shown, thus no comparison of failure modes or retransmissions is given </t>
+
     </list>
   </t>
 
@@ -639,6 +644,9 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
       having several bespoke stacks instead of one mainstream stack and protocols.
       This document seeks to improve security of the IoT by encouraging use of mainstream protocols which are better understood
       and more thoroughly debugged (both in their specifications as well as in their implementations). 
+  </t>
+  <t>
+      <xref target="proxies" /> point out another issue with the current IoT landscape: the proliferation of gateways and proxies. Whereas they serve useful functions in IoT, allowing more constrained nodes to have much lower duty cycles or filtering them from much traffic, there are inherent security issues, not the least of which is that they break end-to-end security. Enabling more mainstream protocols would not preclude using a proxy or gateway whenever the tradeoff dictated it, but would also allow for end-to-end security. 
   </t>
   </section>
 
