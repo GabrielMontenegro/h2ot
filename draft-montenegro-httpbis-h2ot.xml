@@ -22,6 +22,8 @@
   <!ENTITY RFC7233 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7233.xml'>
   <!ENTITY RFC7234 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7234.xml'>
   <!ENTITY RFC7235 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7235.xml'>
+  <!ENTITY RFC7252 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7252.xml'>
+  <!ENTITY RFC7452 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7452.xml'>
   <!ENTITY RFC7540 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7540.xml'>
   <!ENTITY RFC7541 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7541.xml'>
   <!ENTITY RFC7749 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7749.xml'>
@@ -121,7 +123,7 @@ This document makes the case for HTTP/2 for IoT.
 
     <t>
     Let's look at some application communication patterns to establish some
-    common language:
+    common language (see also section 2 of <xref target="RFC7452" /> for a related discussion):
     
    <list style='hanging'>
 		<t hangText="node to node:"> 
@@ -142,6 +144,9 @@ This document makes the case for HTTP/2 for IoT.
       A node on a constrained network engages in direct communcation with unconstrained networks, typically a cloud service on the Internet.
 		</t>
 	</list>   
+  </t>
+  <t>
+  In the above, a "node" may, in fact, be multiple nodes when engaging in group communication. Group communications (e.g., via multicast) are commonly used for discovery or routing (see also <xref target="coap" />).
 	</t>
 
 	<t>
@@ -149,13 +154,14 @@ This document makes the case for HTTP/2 for IoT.
 
    <list style='hanging'>
 		<t hangText="Constrained network scenario:"> 
-			A constrained network scenario includes node to node and node to gateway exchanges.
+			A constrained network scenario includes node to node and node to gateway exchanges. Group communications are another typical aspect of these constrained networks.
 		</t>
     
 		<t hangText="Internet scenario:"> 
 			An Internet scenario includes gateway to cloud and node to cloud exchanges.
 		</t>
 	</list> 
+   
 	</t>
   
 	<t>
@@ -249,11 +255,11 @@ resource constrained devices and unreliable networks.
 		
 	</section>
 
-    <section title="CoAP"> 
+    <section anchor="coap" title="CoAP"> 
 		<t> 
       CoAP is a compact, binary, UDP-based protocol based on RESTful principles and closely patterned after HTTP. 
       It has been designed to be used in constrained devices and constrained networks. 
-      The protocol specification has been published in RFC 7252, although additional functionalities such as congestion control, 
+      The protocol specification has been published <xref target="RFC7252" />, although additional functionalities such as congestion control, 
       block-wise transfer, TCP and TLS transfer and HTTP mapping are still being specified. 
       </t>
 
@@ -276,21 +282,21 @@ resource constrained devices and unreliable networks.
       <t>
       CoAP works on port 5683 and offers optional reliable 
       delivery (thru a retransmission mechanism), support for unicast and multicast, and asynchronous message exchange.
-      Multicast is touted as required to support group communications. In practice, it is used by IoT SDO's for discovery 
-      which is addressed in mainstream (and even some IoT) scenarios via mDNS <xref target="RFC6762"/> and DNS-SD <xref target="RFC6763"/>. 
-      More general uses of multicast at the application transport, e.g., to address group communication for IoT, 
+      Multicast (see <xref target="intro" /> is typically used by IoT SDO's for routing and discovery.
+      A common use of multicast within CoAP is for discovery, something addressed in mainstream (and even some IoT) scenarios via mDNS <xref target="RFC6762"/> and DNS-SD <xref target="RFC6763"/>. 
+      More general uses of multicast within CoAP (and, in general, at the application transport, e.g., to address group communication for IoT), 
       introduces complexity for security, IPv6 scoping, wireless reliability, etc. 
       </t>
       <t>
       A typical CoAP message can be between 10 and 20 bytes. 
       </t>
       <t>
-      It is the third most popular protocol in the survey with a 21% preference. Nevertheless, since CoAP is UDP-based, it also suffers from firewall traversal issues, verbosity (as compared to TCP) to maintain state in NAT boxes and lack of integration with existing enterprise infrastructures. There is ongoing work to specify the use of CoAP over TCP as well as CoAP over TLS, in an attempt to overcome issues with middleboxes and improve its applicability to Internet scenarios.
+      It is the third most popular protocol in the survey with a 21% preference. Nevertheless, since CoAP is UDP-based, in the Internet scenario it also suffers from firewall traversal issues, verbosity (as compared to TCP) to maintain state in NAT boxes and lack of integration with existing enterprise infrastructures. There is ongoing work to specify the use of CoAP over TCP as well as CoAP over TLS, in an attempt to overcome issues with middleboxes and improve its applicability to Internet scenarios.
 		</t>
     <t>
       As noted above, there is much ongoing work on CoAP, and much of it seeks to define a transport on top of UDP. This is a very complex
-      task not to be underestimated. QUIC is also embarking on this task, but it is a mainstream effort and consequently
-      benefits from many more resources by the networking community at large. 
+      task not to be underestimated. QUIC is also embarking on this task, but it appears to be benefitting 
+      from many more resources within the networking community at large. 
     </t> 
     </section>
     
@@ -310,7 +316,7 @@ resource constrained devices and unreliable networks.
 <section anchor="reuse" title="Importance of Protocol Reuse"> 
   <t>
     These protocols often do not exist in a vacuum. Typically, they are mandated as part of a given stack specified by
-    any of several IoT consortia (e.g., OFC, AllSeen Alliance/AllJoyn, Thread Group). We know that these multiple IoT protocols
+    any of several IoT consortia (e.g., OCF, AllSeen Alliance/AllJoyn, Thread Group). We know that these multiple IoT protocols
     (and stacks) provide very useful sources of information for prying eyes (See “US intelligence chief says we might use the IoT to spy on you” 
     at http://www.wired.com/2012/03/petraeus-tv-remote/). Security and privacy issues are exacerbated because:
     
@@ -358,7 +364,7 @@ resource constrained devices and unreliable networks.
 <section title="HTTP/2 in IoT"> 
   <t>
     As noted above, for the foreseeable future the IoT landscape requires several stacks. Thinking about a canonical stack based on
-    mainstream protocols is not an exercise in the delusion that one single stack will be enough. Rather, it is an attempt to defined
+    mainstream protocols is not an exercise in the delusion that one single stack will be enough. Rather, it is an attempt to define
     an option that can serve IoT better into the future, and one that can be recommended whenever there is a choice (often there isn't one). 
   </t>
 <t>
@@ -375,12 +381,14 @@ To arrive at a canonical stack the mainstream standards-based stack must be prop
 requires optimizing aspects such as:
   <list style='symbols'>
 		<t>Authentication and Authorization framework by adapting OAUTH instead of inventing a new system 
-      <xref target="I-D.ietf-ace-oauth-authz" /> </t>
-		<t>Device Management and Object Model/Descriptions (currently being defined)</t>
+      <xref target="I-D.ietf-ace-oauth-authz" />. </t>
+		<t>Device Management and Object Model/Descriptions (currently being defined).</t>
 		<t>Discovery via mDNS <xref target="RFC6762"/> and DNS-SD <xref target="RFC6763"/> perhaps augmented with IoT considerations, e.g., 
-        <xref target="I-D.aggarwal-dnssd-optimize-query" /> </t>
-    <t>Application Transport based on HTTP/2</t>
+        <xref target="I-D.aggarwal-dnssd-optimize-query" />. Another option to investigate is that of HTTP/2 over multicast. Whereas there have been some forays into HTTP over multicast, it is not nearly as well deployed, implemented and understood as mDNS. </t>
+    <t>Application Transport based on HTTP/2.</t>
 	</list>
+  </t>
+  <t>
   This document deals only with the application layer transport based on HTTP/2. 
   </t>
   <t>
@@ -400,7 +408,7 @@ requires optimizing aspects such as:
   <t>HTTP/2 has many negotiable settings that can improve its performance for IoT applications by reducing bandwidth, codespace, and RAM requirements. Specifically, the following settings and values have been found to be useful in IoT applications:
     <list style='symbols'>
       <t> SETTINGS_HEADER_TABLE_SIZE: this setting allows hosts to limit the size of the header compression table used for decoding, reducing required RAM, but potentially increasing bandwidth requirements. Initial value per HTTP/2 is 4096. IoT scenarios might benefit from changing this to a smaller value (e.g., 512), however, to avoid increased bandwidth usage, IoT scenarios should judiciously use HTTP headers and the dynamic header table <xref target="RFC7541"/>.  </t>
-      <t> SETTINGS_ENABLE_PUSH: This setting allows to enable/disable server push. This functionality may not be required in some IoT applications. The initial value per HTTP/2 is 1.</t>
+      <t> SETTINGS_ENABLE_PUSH: This setting allows clients to enable or disable server push. This functionality may not be required in some IoT applications. The initial value per HTTP/2 is 1.</t>
       <t> SETTINGS_MAX_CONCURRENT_STREAMS: this setting allows a sender to limit the number of simultaneous streams that a receiver can create for a connection. HTTP/2 recommends this value be no smaller than 100. IoT scenarios may wish to limit this to a much smaller number, such as 2 or 3. </t>
       <t> SETTINGS_INITIAL_WINDOW_SIZE: this setting allows hosts to limit the flow control window, potentially reducing buffer requirements at the expense of potentially underutilized bandwidth-delay products. Per HTTP/2 the initial value is 2^16-1 (65,535) octets. IoT scenarios may wish to limit this to smaller values in accordance with the node's constraints (e.g., a few kilo-octets).
  </t>
@@ -413,7 +421,7 @@ requires optimizing aspects such as:
 
 <section title="Negotiation of HTTP/2 for IoT"> 
   <t>
-    For Internet scenarios, it is assumed that HTTP/2 runs over TLS. Accordingly, the ALPN negotiation in section 3.3 of <xref target="RFC7540"/> applies. As seen above, an IoT scenario may wish to depart from the default SETTINGS. To do so, the usual SETTINGS negotiation applies.
+    For Constrained and Internet scenarios, it is assumed that HTTP/2 runs over TLS. Accordingly, the ALPN negotiation in section 3.3 of <xref target="RFC7540"/> applies. As seen above, an IoT scenario may wish to depart from the default SETTINGS. To do so, the usual SETTINGS negotiation applies.
 	  In this case, the initial SETTINGS negotiation setup is based on the first message exchange initiated by the client.
     This is simpler than general HTTP/2 case: not having an in-the-clear Upgrade path means the client is always in control of first HTTP/2 message, including any SETTINGS changes it may wish.
   </t>
@@ -442,6 +450,9 @@ requires optimizing aspects such as:
 </section>
 
 <section title="Implementation Considerations"> 
+  <t> This section assumes HTTP/2 over TCP. 
+  </t>
+  
   <t> In addition to underlying stack considerations with respect to IPv4, IPv6, TCP, and TLS, there are implementation considerations for HTTP/2 for IoT. </t>
   
   <t> A primary consideration is the number of allowed simultaneous HTTP/2 connections. As each connection has associated overhead, as well as overhead for each stream, constrained hosts may wish to limit their number of simultaneous connections. However, implementers should consider that some popular browsers require more than one connection to operate. </t>
@@ -610,7 +621,7 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
    </t>
 
    <t>
-    QUIC will use TLS 1.3. Accordingly, connections will commonly benefit from 0-RTT as defined by TLS 1.3, 
+    QUIC will use DTLS 1.3. Accordingly, connections will commonly benefit from 0-RTT as defined by TLS 1.3, 
     meaning that on most QUIC connections, data can be sent immediately without waiting for a reply from the server.
     Furthermore, packets are always authenticated and typically the payload is fully encrypted.
    </t>
@@ -652,7 +663,7 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
 
     <section title="Acknowledgements">
       <t>
-        Thanks to the following individuals for helpful comments and discussion: Brian Raymor. 
+        Thanks to the following individuals for helpful comments and discussion: Brian Raymor, Dave Thaler. 
       </t>
       <t>
         This document was produced using the xml2rfc tool <xref target="RFC2629"/><xref target="RFC7749"/>. 
@@ -688,6 +699,10 @@ date: Mon, 09 Mar 2015 06:26:44 GMT
       &RFC6762;
 
       &RFC6763;
+
+      &RFC7252;      
+
+      &RFC7452;      
 
       &RFC7749;      
       
