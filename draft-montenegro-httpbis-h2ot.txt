@@ -69,7 +69,7 @@ Table of Contents
      2.2.  MQTT  . . . . . . . . . . . . . . . . . . . . . . . . . .   5
      2.3.  CoAP  . . . . . . . . . . . . . . . . . . . . . . . . . .   6
      2.4.  Protocols Comparison  . . . . . . . . . . . . . . . . . .   7
-   3.  Importance of Protocol Reuse  . . . . . . . . . . . . . . . .   7
+   3.  Importance of Protocol Reuse  . . . . . . . . . . . . . . . .   8
    4.  HTTP/2 in IoT . . . . . . . . . . . . . . . . . . . . . . . .   9
    5.  Profile of HTTP/2 for IoT . . . . . . . . . . . . . . . . . .  10
    6.  Negotiation of HTTP/2 for IoT . . . . . . . . . . . . . . . .  11
@@ -267,13 +267,13 @@ Internet-Draft                    H2oT                         July 2016
 2.2.  MQTT
 
    MQ Telemetry Transport (MQTT) is a publish/subscribe messaging
-   protocol that runs on top of TCP.  It was created by IBM, now being
-   standardized by OASIS.  It is popular in the Internet scenario (node
+   protocol that runs on top of TCP.  It was created by IBM.  Version
+   3.1.1 is available as an OASIS standard [mqtt_oasis] and as an ISO
+   publication [mqtt_iso].  It is popular in the Internet scenario (node
    to cloud, gateway to cloud) and it aims to connect embedded devices
    and networks with applications and middleware.  It is a compact,
    binary protocol, and is very popular in certain application domains.
-   It has been known as a protocol suitable to be used in resource
-   constrained devices and unreliable networks.
+
 
 
 
@@ -282,15 +282,18 @@ Montenegro, et al.       Expires January 8, 2017                [Page 5]
 Internet-Draft                    H2oT                         July 2016
 
 
+   It has been known as a protocol suitable to be used in resource
+   constrained devices and unreliable networks.
+
    It is the second most popular protocol in the survey (behind
    HTTP/1.1) with 52% of developers using it.  In the internet scenario,
-   however, TLS is mandatory.  In practice, additional TLS overhead is
-   required for all Internet scenario exchanges, so all protocols are
-   slightly larger and MQTT loses some relative size advantage.  There
-   is a spec for MQTT over UDP, but, by far it is most commonly deployed
-   over TCP (port 8833 when over TLS, port 1883 without TLS).  Even when
-   using TLS, it has the well-known firewall traversal issues common to
-   any protocol not over port 443.
+   however, TLS is probably required.  This additional TLS overhead
+   renders all protocols slightly larger, so, e.g., MQTT loses some
+   relative size advantage.  There is some effort on MQTT over UDP, but,
+   by far it is most commonly deployed over TCP (port 8833 when over
+   TLS, port 1883 without TLS).  Even when using TLS, it has the well-
+   known firewall traversal issues common to any protocol not over port
+   443.
 
 2.3.  CoAP
 
@@ -328,9 +331,6 @@ Internet-Draft                    H2oT                         July 2016
 
    A typical CoAP message can be between 10 and 20 bytes.
 
-   It is the third most popular protocol in the survey with a 21%
-   preference.  Nevertheless, since CoAP is UDP-based, it also suffers
-
 
 
 Montenegro, et al.       Expires January 8, 2017                [Page 6]
@@ -338,6 +338,8 @@ Montenegro, et al.       Expires January 8, 2017                [Page 6]
 Internet-Draft                    H2oT                         July 2016
 
 
+   It is the third most popular protocol in the survey with a 21%
+   preference.  Nevertheless, since CoAP is UDP-based, it also suffers
    from firewall traversal issues, verbosity (as compared to TCP) to
    maintain state in NAT boxes and lack of integration with existing
    enterprise infrastructures.  There is ongoing work to specify the use
@@ -381,11 +383,9 @@ Internet-Draft                    H2oT                         July 2016
 
    To date, no reports have been found comparing MQTT or CoAP to HTTP/2.
 
-3.  Importance of Protocol Reuse
 
-   These protocols often do not exist in a vacuum.  Typically, they are
-   mandated as part of a given stack specified by any of several IoT
-   consortia (e.g., OFC, AllJoyn, Thread Group, etc).  We know that
+
+
 
 
 
@@ -394,6 +394,11 @@ Montenegro, et al.       Expires January 8, 2017                [Page 7]
 Internet-Draft                    H2oT                         July 2016
 
 
+3.  Importance of Protocol Reuse
+
+   These protocols often do not exist in a vacuum.  Typically, they are
+   mandated as part of a given stack specified by any of several IoT
+   consortia (e.g., OFC, AllJoyn, Thread Group, etc).  We know that
    these multiple IoT protocols (and stacks) provide very useful sources
    of information for prying eyes (See "US intelligence chief says we
    might use the IoT to spy on you" at http://www.wired.com/2012/03/
@@ -437,11 +442,6 @@ Internet-Draft                    H2oT                         July 2016
    interoperability.  This goes back to the issue of security.  A recent
    Harvard report on the state of surveillance and erosion of privacy
    [Going_Dark] concludes among its findings that the projected
-   substantial growth of IoT will drastically change surveillance
-   (surveillance is not merely limited to government agencies of
-   course), and that the fragmentation of ecosystems hinders the
-   deployment of countermeasures (e.g., end-to-end encryption) as that
-   requires more coordination and standardization than currently
 
 
 
@@ -450,6 +450,11 @@ Montenegro, et al.       Expires January 8, 2017                [Page 8]
 Internet-Draft                    H2oT                         July 2016
 
 
+   substantial growth of IoT will drastically change surveillance
+   (surveillance is not merely limited to government agencies of
+   course), and that the fragmentation of ecosystems hinders the
+   deployment of countermeasures (e.g., end-to-end encryption) as that
+   requires more coordination and standardization than currently
    available.  This not only gives rise to rogue surveillance sites such
    as Shodan (https://www.shodan.io/), but also represents a great
    opportunity for government agencies' surveillance needs [Clapper].
@@ -492,11 +497,6 @@ Internet-Draft                    H2oT                         July 2016
    o  Device Management and Object Model/Descriptions (currently being
       defined)
 
-   o  Discovery via mDNS [RFC6762] and DNS-SD [RFC6763] perhaps
-      augmented with IoT considerations, e.g.,
-      [I-D.aggarwal-dnssd-optimize-query]
-
-   o  Application Transport based on HTTP/2
 
 
 
@@ -505,6 +505,12 @@ Montenegro, et al.       Expires January 8, 2017                [Page 9]
 
 Internet-Draft                    H2oT                         July 2016
 
+
+   o  Discovery via mDNS [RFC6762] and DNS-SD [RFC6763] perhaps
+      augmented with IoT considerations, e.g.,
+      [I-D.aggarwal-dnssd-optimize-query]
+
+   o  Application Transport based on HTTP/2
 
    This document deals only with the application layer transport based
    on HTTP/2.
@@ -548,12 +554,6 @@ Internet-Draft                    H2oT                         July 2016
 
    o  SETTINGS_INITIAL_WINDOW_SIZE: this setting allows hosts to limit
       the flow control window, potentially reducing buffer requirements
-      at the expense of potentially underutilized bandwidth-delay
-      products.  Per HTTP/2 the initial value is 2^16-1 (65,535) octets.
-      IoT scenarios may wish to limit this to smaller values in
-      accordance with the node's constraints (e.g., a few kilo-octets).
-
-
 
 
 
@@ -561,6 +561,11 @@ Montenegro, et al.       Expires January 8, 2017               [Page 10]
 
 Internet-Draft                    H2oT                         July 2016
 
+
+      at the expense of potentially underutilized bandwidth-delay
+      products.  Per HTTP/2 the initial value is 2^16-1 (65,535) octets.
+      IoT scenarios may wish to limit this to smaller values in
+      accordance with the node's constraints (e.g., a few kilo-octets).
 
    o  SETTINGS_MAX_FRAME_SIZE: this setting allows hosts to specify the
       largest frame size they are willing to receive.  Per HTTP/2 the
@@ -604,11 +609,6 @@ Internet-Draft                    H2oT                         July 2016
    the Cloud or because usually they are controlled by a Web
    application.
 
-   In such cases, communication is facilitated by a cross-protocol proxy
-   or a gateway translating from one protocol syntax and semantic into
-   another one.  However, the presence of Cross-Protocol or Application
-   gateways has at least two main drawbacks that need to be analyzed and
-   addressed carefully.
 
 
 
@@ -617,6 +617,12 @@ Montenegro, et al.       Expires January 8, 2017               [Page 11]
 
 Internet-Draft                    H2oT                         July 2016
 
+
+   In such cases, communication is facilitated by a cross-protocol proxy
+   or a gateway translating from one protocol syntax and semantic into
+   another one.  However, the presence of Cross-Protocol or Application
+   gateways has at least two main drawbacks that need to be analyzed and
+   addressed carefully.
 
    o  while the translation may be trivial for the basic scenarios,
       there are a lot of cases where the translation can lead to
@@ -661,18 +667,17 @@ Internet-Draft                    H2oT                         July 2016
    both bandwidth and battery life, as well as potentially saving some
    memory/buffer space.
 
-   The results presented in this section make the following assumptions
-   and considerations:
-
-   o  Overhead from TCP and TLS are ignored
-
-
 
 
 Montenegro, et al.       Expires January 8, 2017               [Page 12]
 
 Internet-Draft                    H2oT                         July 2016
 
+
+   The results presented in this section make the following assumptions
+   and considerations:
+
+   o  Overhead from TCP and TLS are ignored
 
    o  An attempt to minimize the headers used has been made while still
       maintaining RFC compliance
@@ -717,11 +722,6 @@ Internet-Draft                    H2oT                         July 2016
    2f73 7461 7465 3e0a 3c2f 4f6e 4f66 663e
 
        In ASCII:
-
-
-
-
-
 
 
 
@@ -875,6 +875,9 @@ Internet-Draft                    H2oT                         July 2016
 
 13.  Acknowledgements
 
+   Thanks to the following individuals for helpful comments and
+   discussion: Brian Raymor.
+
    This document was produced using the xml2rfc tool [RFC2629][RFC7749].
 
 14.  References
@@ -886,10 +889,7 @@ Internet-Draft                    H2oT                         July 2016
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC7230]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
-              Protocol (HTTP/1.1): Message Syntax and Routing",
-              RFC 7230, DOI 10.17487/RFC7230, June 2014,
-              <http://www.rfc-editor.org/info/rfc7230>.
+
 
 
 
@@ -897,6 +897,11 @@ Montenegro, et al.       Expires January 8, 2017               [Page 16]
 
 Internet-Draft                    H2oT                         July 2016
 
+
+   [RFC7230]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
+              Protocol (HTTP/1.1): Message Syntax and Routing",
+              RFC 7230, DOI 10.17487/RFC7230, June 2014,
+              <http://www.rfc-editor.org/info/rfc7230>.
 
    [RFC7231]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
               Protocol (HTTP/1.1): Semantics and Content", RFC 7231,
@@ -940,11 +945,6 @@ Internet-Draft                    H2oT                         July 2016
               Constrained Environments (ACE)", draft-ietf-ace-oauth-
               authz-02 (work in progress), June 2016.
 
-   [I-D.aggarwal-dnssd-optimize-query]
-              Aggarwal, A., "Optimizing DNS-SD query using TXT records",
-              draft-aggarwal-dnssd-optimize-query-00 (work in progress),
-              July 2014.
-
 
 
 
@@ -953,6 +953,11 @@ Montenegro, et al.       Expires January 8, 2017               [Page 17]
 
 Internet-Draft                    H2oT                         July 2016
 
+
+   [I-D.aggarwal-dnssd-optimize-query]
+              Aggarwal, A., "Optimizing DNS-SD query using TXT records",
+              draft-aggarwal-dnssd-optimize-query-00 (work in progress),
+              July 2014.
 
    [RFC2616]  Fielding, R., Gettys, J., Mogul, J., Frystyk, H.,
               Masinter, L., Leach, P., and T. Berners-Lee, "Hypertext
@@ -980,10 +985,30 @@ Internet-Draft                    H2oT                         July 2016
               Simpson, R., "Deuterium HTTP/2 Library", June 2016,
               <http://robbysimpson.org/deuterium/>.
 
+   [mqtt_oasis]
+              OASIS, "MQTT Version 3.1.1 becomes an OASIS Standard",
+              October 2014, <https://www.oasis-
+              open.org/news/announcements/mqtt-version-3-1-1-becomes-an-
+              oasis-standard>.
+
+   [mqtt_iso]
+              ISO, "ISO/IEC 20922:2016 Information technology -- Message
+              Queuing Telemetry Transport (MQTT) v3.1.1", June 2016,
+              <http://www.iso.org/iso/
+              catalogue_detail.htm?csnumber=69466>.
+
    [Eclipse_survey]
               Eclipse Foundation, "IoT Developer Survey", April 2016,
               <http://iot.ieee.org/images/files/pdf/
               iot-developer-survey-2016-report-final.pdf>.
+
+
+
+
+Montenegro, et al.       Expires January 8, 2017               [Page 18]
+
+Internet-Draft                    H2oT                         July 2016
+
 
    [IEEE_survey]
               Al-Fuqaha, A., Guizani, M., Mohammadi, M., Aledhari, M.,
@@ -1002,13 +1027,6 @@ Internet-Draft                    H2oT                         July 2016
               Corazza, "Internet of Things application layer protocol
               analysis over error and delay prone links", Proc. ASMS/
               SPSC Conference , 2014.
-
-
-
-Montenegro, et al.       Expires January 8, 2017               [Page 18]
-
-Internet-Draft                    H2oT                         July 2016
-
 
    [CoAP_integration]
               Giang, N., Ha, M., and D. Kim, "SCoAP: An integration of
@@ -1041,6 +1059,13 @@ Authors' Addresses
    Email: scespedes@ing.uchile.cl
 
 
+
+
+Montenegro, et al.       Expires January 8, 2017               [Page 19]
+
+Internet-Draft                    H2oT                         July 2016
+
+
    Salvatore Loreto
    Ericsson
 
@@ -1061,4 +1086,35 @@ Authors' Addresses
 
 
 
-Montenegro, et al.       Expires January 8, 2017               [Page 19]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Montenegro, et al.       Expires January 8, 2017               [Page 20]
