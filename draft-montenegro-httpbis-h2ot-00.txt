@@ -14,7 +14,7 @@ Expires: January 9, 2017                            Universidad de Chile
 
 
                 H2oT: HTTP/2 for the Internet of Things
-                  draft-montenegro-httpbis-h2ot-latest
+                    draft-montenegro-httpbis-h2ot-00
 
 Abstract
 
